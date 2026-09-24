@@ -14,10 +14,10 @@ from app.exceptions.database import DatabaseErrorException
 __all__ = [
     "AppException",
     "ConflictException",
+    "DatabaseErrorException",
     "ForbiddenException",
     "ResourceNotFoundException",
     "UnauthorizedException",
     "ValidationException",
-    "DatabaseErrorException",
 ]
 

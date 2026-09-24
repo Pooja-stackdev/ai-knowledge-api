@@ -5,9 +5,6 @@ import pytest
 
 from app.domain.enums.document import DocumentStatus
 from app.exceptions import AppException
-from app.database.repositories.document_repository import (
-    DocumentRepository,
-)
 
 
 def test_upload_document_success(client):

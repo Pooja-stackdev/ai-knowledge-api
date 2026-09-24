@@ -4,6 +4,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from app.database.base import Base
 from app.database.models.document import Document
+from app.database.models.document_chunk import DocumentChunk
 from app.core.config import settings
 
 from alembic import context
@@ -41,8 +42,6 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    print("ALEMBIC URL:", config.get_main_option("sqlalchemy.url"))
-    print("DATABASE URL:", settings.database_url)
     config.set_main_option(
         "sqlalchemy.url",
         settings.database_url,

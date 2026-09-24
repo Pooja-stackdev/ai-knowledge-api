@@ -4,8 +4,12 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.database.models.document import Document
-from app.database.repositories.document_repository import (
+from app.database.models.document_chunk import DocumentChunk
+from app.database.repositories.document import (
     DocumentRepository,
+)
+from app.database.repositories.document_chunk import (
+    DocumentChunkRepository,
 )
 from app.domain.enums.document import DocumentStatus
 from app.domain.validators.document_lifecycle import validate_transition
@@ -23,18 +27,19 @@ class DocumentService:
         db: Session,
         repository: DocumentRepository,
         storage: LocalFileStorage,
+        chunk_repository: DocumentChunkRepository,
     ):
         self.db = db
         self.repository = repository
         self.storage = storage
+        self.chunk_repository = chunk_repository
 
     def get_document(
         self,
         document_id: int,
     ) -> Document | None:
-
-        
         return self.repository.get_by_id(document_id)
+    
 
     async def upload_document(
         self,
@@ -42,7 +47,7 @@ class DocumentService:
         filename: str,
         content_type: str,
         description: str | None = None,
-    ):
+    ) -> Document:
         DocumentValidator.validate(
             filename=filename,
             content_type=content_type,
@@ -78,13 +83,15 @@ class DocumentService:
 
         except Exception:
             self.db.rollback()
+
             stored_path.unlink(missing_ok=True)
+
             raise
 
     def claim_documents(
         self,
         limit: int = 10,
-    ):
+    ) -> list[Document]:
         try:
             documents = self.repository.claim_pending_documents(
                 limit=limit,
@@ -101,7 +108,7 @@ class DocumentService:
     def mark_processing(
         self,
         document: Document,
-    ):
+    ) -> Document:
         return self._change_status(
             document=document,
             new_status=DocumentStatus.PROCESSING,
@@ -110,7 +117,7 @@ class DocumentService:
     def mark_completed(
         self,
         document: Document,
-    ):
+    ) -> Document:
         return self._change_status(
             document=document,
             new_status=DocumentStatus.COMPLETED,
@@ -120,7 +127,7 @@ class DocumentService:
         self,
         document: Document,
         error: str,
-    ):
+    ) -> Document:
         validate_transition(
             current=document.status,
             new=DocumentStatus.FAILED,
@@ -143,7 +150,8 @@ class DocumentService:
     def retry_document(
         self,
         document_id: int,
-    ):
+    ) -> Document:
+        logger.info(f"retry document id:{document_id}")
         document = self.repository.get_by_id(document_id)
 
         if document is None:
@@ -157,6 +165,7 @@ class DocumentService:
             new=DocumentStatus.PENDING,
         )
 
+        logger.info(f"retry document id:{document_id}, attempt_count:{document.attempt_count}")
         if document.attempt_count >= settings.max_processing_attempts:
             raise ValueError(
                 "Maximum processing attempts exceeded"
@@ -183,42 +192,34 @@ class DocumentService:
         documents = self.repository.get_stuck_processing_documents(
             timeout_minutes=timeout_minutes,
         )
-        print("hiiiiiiiiii")
-        print(list(documents))
+
+        logger.info(f"get recover documents:{documents}")
+       
         recovered = 0
 
         try:
             for document in documents:
 
-                print(
-                    f"QUERY RESULT: id={document.id}, "
-                    f"status={document.status}, "
-                    f"attempt_count={document.attempt_count}, "
-                    f"processing_started_at={document.processing_started_at}"
-                    f"max_processing_attempts={settings.max_processing_attempts}"
-                )
                 if (
                     document.attempt_count
                     >= settings.max_processing_attempts
                 ):
-                    print(document.status)
+                    
                     document.status = DocumentStatus.FAILED
                     document.last_error = (
                         "Maximum processing attempts exceeded"
                     )
-                    document.processing_started_at = None
 
                 else:
                     document.status = DocumentStatus.PENDING
-                    document.processing_started_at = None
                     document.last_error = (
                         "Worker processing timeout"
                     )
 
+                document.processing_started_at = None
                 recovered += 1
 
             self.db.commit()
-            print(recovered)
 
             return recovered
 
@@ -228,28 +229,84 @@ class DocumentService:
             logger.exception("Document recover worker iteration failed")
             raise
 
-    def _change_status(
-        self,
-        document: Document,
-        new_status: DocumentStatus,
-    ):
-        validate_transition(
-            current=document.status,
-            new=new_status,
-        )
 
+    def save_chunks(
+        self,
+        *,
+        document_id: int,
+        chunks: list[DocumentChunk],
+    ) -> list[DocumentChunk]:
         try:
-            self.repository.update_status(
-                document,
-                new_status,
+            database_chunks = [
+                DocumentChunk(
+                    document_id=document_id,
+                    chunk_index=chunk.chunk_index,
+                    page_number=chunk.page_number,
+                    content=chunk.content,
+                )
+                for chunk in chunks
+            ]
+
+            self.chunk_repository.create_many(
+                database_chunks,
             )
 
             self.db.commit()
-            self.db.refresh(document)
 
-            return document
+            for chunk in database_chunks:
+                self.db.refresh(chunk)
+
+            return database_chunks
 
         except Exception:
             self.db.rollback()
             raise
 
+
+    def clear_document_chunks(
+        self,
+        document_id: int,
+    ) -> None:
+        try:
+            self.chunk_repository.delete_by_document_id(
+                document_id,
+            )
+
+            self.db.commit()
+
+        except Exception:
+            self.db.rollback()
+            raise
+
+    def get_chunks(
+        self,
+        document_id: int,
+    ):
+        return self.chunk_repository.get_by_document_id(
+            document_id,
+        )
+
+    def _change_status(
+            self,
+            document: Document,
+            new_status: DocumentStatus,
+        ):
+            validate_transition(
+                current=document.status,
+                new=new_status,
+            )
+    
+            try:
+                self.repository.update_status(
+                    document,
+                    new_status,
+                )
+    
+                self.db.commit()
+                self.db.refresh(document)
+    
+                return document
+    
+            except Exception:
+                self.db.rollback()
+                raise

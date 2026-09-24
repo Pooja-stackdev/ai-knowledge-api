@@ -1,21 +1,22 @@
 import pytest
-
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import sessionmaker
 
-from app.main import app
-from app.api.routes.documents import get_db_session
+from app.application.document_worker_service import DocumentWorkerService
+from app.core.config import settings
 from app.database.base import Base
+from app.database.connection import get_db_session
 from app.database.models.document import Document
-from app.database.repositories.document_repository import (
+from app.database.repositories.document import (
     DocumentRepository,
 )
-from app.domain.services.document_service import DocumentService
-from app.application.document_worker_service import DocumentWorkerService
+from app.database.repositories.document_chunk import (
+    DocumentChunkRepository,
+)
 from app.domain.enums.document import DocumentStatus
-from app.core.config import settings
-
+from app.main import app
+from app.services.document_service import DocumentService
 
 test_engine = create_engine(
     settings.test_database_url,
@@ -82,10 +83,13 @@ def document(db_session):
 def document_service(db_session):
     repository = DocumentRepository(db_session)
 
+    chunk_repository = DocumentChunkRepository(db_session)
+
     return DocumentService(
         db=db_session,
         repository=repository,
         storage=None,
+        chunk_repository=chunk_repository,
     )
 
 @pytest.fixture

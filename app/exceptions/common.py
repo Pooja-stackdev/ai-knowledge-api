@@ -10,7 +10,7 @@ class ResourceNotFoundException(AppException):
         self,
         resource: str,
         resource_id: int | str,
-    ):
+    ) -> None:
         super().__init__(
             message=f"{resource} with id '{resource_id}' not found",
             status_code=404,
@@ -24,7 +24,7 @@ class ValidationException(AppException):
         self,
         message: str,
         details: list[str] | dict | None = None,
-    ):
+    ) -> None:
         super().__init__(
             message=message,
             status_code=422,
@@ -33,13 +33,13 @@ class ValidationException(AppException):
 
 
 class ConflictException(AppException):
-    """Raised when a request conflicts with current resource state."""
+    """Raised when a request conflicts with the current resource state."""
 
     def __init__(
         self,
         message: str,
         details: list[str] | dict | None = None,
-    ):
+    ) -> None:
         super().__init__(
             message=message,
             status_code=409,
@@ -50,7 +50,10 @@ class ConflictException(AppException):
 class UnauthorizedException(AppException):
     """Raised when authentication is required or invalid."""
 
-    def __init__(self, message: str = "Authentication required"):
+    def __init__(
+        self,
+        message: str = "Authentication required",
+    ) -> None:
         super().__init__(
             message=message,
             status_code=401,
@@ -60,7 +63,10 @@ class UnauthorizedException(AppException):
 class ForbiddenException(AppException):
     """Raised when the user is not allowed to perform an operation."""
 
-    def __init__(self, message: str = "Permission denied"):
+    def __init__(
+        self,
+        message: str = "Permission denied",
+    ) -> None:
         super().__init__(
             message=message,
             status_code=403,

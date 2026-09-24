@@ -1,11 +1,10 @@
+from datetime import datetime, timedelta, timezone
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database.models.document import Document
 from app.domain.enums.document import DocumentStatus
-from datetime import datetime
-from datetime import datetime, timedelta,timezone
-from sqlalchemy import select
 
 
 class DocumentRepository:

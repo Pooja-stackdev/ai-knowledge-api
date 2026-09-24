@@ -1,4 +1,3 @@
-
 """Common API response formatting utilities."""
 
 from typing import Any
@@ -11,9 +10,12 @@ from app.schemas.response import ApiResponse
 def success_response(
     message: str,
     data: Any = None,
-) -> dict:
-    """Create a standard successful API response."""
+) -> dict[str, Any]:
+    """Create a standardized successful API response.
 
+    Pydantic models are converted to dictionaries before being included
+    in the response payload.
+    """
     if isinstance(data, BaseModel):
         data = data.model_dump()
 
@@ -27,11 +29,16 @@ def success_response(
 def error_response(
     message: str,
     errors: Any = None,
-) -> dict:
-    """Create a standard error API response."""
+) -> dict[str, Any]:
+    """Create a standardized error API response.
 
+    The message and optional error details are intended for safe
+    client-facing information. Internal exception details should be
+    logged separately and should not be exposed here.
+    """
     return ApiResponse(
         success=False,
         message=message,
         errors=errors,
     ).model_dump(exclude_none=True)
+

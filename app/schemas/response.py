@@ -14,3 +14,8 @@ class ApiResponse(BaseModel, Generic[T]):
     message: str
     data: T | None = None
     errors: Any | None = None
+
+
+
+
+
