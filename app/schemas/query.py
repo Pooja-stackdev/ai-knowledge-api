@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class QueryRequest(BaseModel):
@@ -12,6 +12,16 @@ class QueryRequest(BaseModel):
         ge=1,
         le=20,
     )
+
+    @field_validator("query")
+    @classmethod
+    def validate_query(cls, value: str) -> str:
+        value = value.strip()
+
+        if not value:
+            raise ValueError("Query cannot be empty")
+
+        return value
 class SourceResponse(BaseModel):
     document_id: int
     chunk_id: int

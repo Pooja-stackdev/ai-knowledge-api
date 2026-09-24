@@ -1,5 +1,7 @@
 from langchain_groq import ChatGroq
 
+from app.core.config import settings
+
 
 class GroqLLMProvider:
     """Generate responses using a Groq-hosted language model."""
@@ -13,6 +15,8 @@ class GroqLLMProvider:
         self.llm = ChatGroq(
             api_key=api_key,
             model=model,
+            timeout=settings.llm_timeout_seconds,
+            max_retries=settings.llm_max_retries,
             temperature=0,
         )
 

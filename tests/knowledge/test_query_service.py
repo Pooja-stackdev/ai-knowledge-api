@@ -19,6 +19,21 @@ class FakeRetrievalService:
     ):
         return self.chunks
 
+def test_query_rejects_whitespace_only(client):
+    response = client.post(
+        "/query",
+        json={"query": "   "},
+    )
+
+    assert response.status_code == 422
+
+def test_query_rejects_query_over_max_length(client):
+    response = client.post(
+        "/query",
+        json={"query": "a" * 2001},
+    )
+
+    assert response.status_code == 422
 
 def test_query_returns_answer_and_sources():
     chunks = [

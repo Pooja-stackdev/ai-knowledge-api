@@ -58,5 +58,9 @@ class Settings(BaseSettings):
 
     retrieval_score_threshold: float = 0.30
 
+    llm_timeout_seconds: float = 30.0
+    llm_max_retries: int = 2
+    llm_retry_delay_seconds: float = 1.0
+
 
 settings = Settings()

@@ -27,9 +27,7 @@ class QueryService:
         top_k: int = 5,
     ) -> QueryResult:
         """Answer a query using retrieved knowledge and an LLM."""
-        if not query.strip():
-            raise ValueError("Query cannot be empty")
-
+        
         chunks = self.retrieval_service.retrieve(
             query=query,
             top_k=top_k,
