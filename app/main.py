@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import SQLAlchemyError
 
+from app.api.routes.auth import router as auth_router
 from app.api.routes.documents import router as document_router
 from app.api.routes.query import router as query_router
 from app.core.config import settings
@@ -24,7 +25,7 @@ app = FastAPI(
     debug=settings.debug,
 )
 
-
+app.include_router(auth_router)
 app.include_router(document_router)
 app.include_router(query_router)
 

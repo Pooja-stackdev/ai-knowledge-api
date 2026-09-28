@@ -2,7 +2,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
+from app.api.dependencies.authorization import require_permission
 from app.api.dependencies.query import get_query_service
+from app.database.models.user import User
 from app.schemas.query import QueryRequest, QueryResponse, SourceResponse
 from app.services.knowledge.query_service import QueryService
 
@@ -11,6 +13,16 @@ router = APIRouter(
     tags=["Query"],
 )
 
+QueryServiceDep = Annotated[
+    QueryService,
+    Depends(get_query_service),
+]
+
+CurrentUserDep = Annotated[
+    User,
+    Depends(require_permission("query.execute")),
+]
+
 
 @router.post(
     "",
@@ -18,11 +30,10 @@ router = APIRouter(
 )
 async def query_knowledge_base(
     request: QueryRequest,
-    service: Annotated[
-        QueryService,
-        Depends(get_query_service),
-    ],
-):
+    service: QueryServiceDep,
+    current_user: CurrentUserDep,
+) -> QueryResponse:
+    """Execute a knowledge-base query for an authorized user."""
     result = service.query(
         query=request.query,
         top_k=request.top_k,

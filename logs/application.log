@@ -1,99 +1,342 @@
-2026-09-24 11:25:41,179 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=1
-2026-09-24 11:25:41,180 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.91}]
-2026-09-24 11:25:41,181 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=1
-2026-09-24 11:25:41,181 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:25:41,186 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=2
-2026-09-24 11:25:41,186 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.91}, {'chunk_id': 20, 'score': 0.72}]
-2026-09-24 11:25:41,186 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=1
-2026-09-24 11:25:41,186 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:25:41,191 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='Some question?' | top_k=5 | results=1
-2026-09-24 11:25:41,191 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.5}]
-2026-09-24 11:25:41,191 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=0
-2026-09-24 11:25:41,192 | INFO | app.services.knowledge.retrieval_service | No relevant chunks found for query
-2026-09-24 11:25:41,196 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What information is available?' | top_k=5 | results=1
-2026-09-24 11:25:41,196 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 999, 'score': 0.95}]
-2026-09-24 11:25:41,196 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=1
-2026-09-24 11:25:41,197 | WARNING | app.services.knowledge.retrieval_service | FAISS returned chunk that was not found in database | chunk_id=999
-2026-09-24 11:25:41,201 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=2
-2026-09-24 11:25:41,201 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.95}, {'chunk_id': 20, 'score': 0.9}]
-2026-09-24 11:25:41,202 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=2
-2026-09-24 11:25:41,202 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:25:41,202 | INFO | app.services.knowledge.retrieval_service | Skipping duplicate chunk | chunk_id=20
-2026-09-24 11:25:41,206 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='test' | top_k=5 | results=2
-2026-09-24 11:25:41,206 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 20, 'score': 0.95}, {'chunk_id': 10, 'score': 0.9}]
-2026-09-24 11:25:41,207 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=2
-2026-09-24 11:25:41,207 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:25:41,207 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=2
-2026-09-24 11:25:41,249 | INFO | app.services.knowledge.ingestion_service | extract_text: %s | {'document_filename': 'test.pdf'}
-2026-09-24 11:25:41,249 | INFO | app.services.knowledge.ingestion_service | Document text extracted | {'document_filename': 'test.pdf', 'page_count': 1}
-2026-09-24 11:25:41,411 | WARNING | app.core.exception_handlers | Application error | path=/documents/upload | message=File type '.exe' is not allowed
-2026-09-24 11:25:41,510 | INFO | app.services.document_service | retry document id:8
-2026-09-24 11:25:41,518 | INFO | app.services.document_service | retry document id:8, attempt_count:1
-2026-09-24 11:25:41,532 | INFO | app.services.document_service | retry document id:9
-2026-09-24 11:25:41,551 | INFO | app.services.document_service | get recover documents:[<app.database.models.document.Document object at 0x00000209FDE6A7B0>]
-2026-09-24 11:26:42,223 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=1
-2026-09-24 11:26:42,223 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.91}]
-2026-09-24 11:26:42,224 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=1
-2026-09-24 11:26:42,224 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:26:42,227 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=2
-2026-09-24 11:26:42,227 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.91}, {'chunk_id': 20, 'score': 0.72}]
-2026-09-24 11:26:42,227 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=1
-2026-09-24 11:26:42,228 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:26:42,233 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='Some question?' | top_k=5 | results=1
-2026-09-24 11:26:42,233 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.5}]
-2026-09-24 11:26:42,233 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=0
-2026-09-24 11:26:42,233 | INFO | app.services.knowledge.retrieval_service | No relevant chunks found for query
-2026-09-24 11:26:42,235 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What information is available?' | top_k=5 | results=1
-2026-09-24 11:26:42,236 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 999, 'score': 0.95}]
-2026-09-24 11:26:42,236 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=1
-2026-09-24 11:26:42,236 | WARNING | app.services.knowledge.retrieval_service | FAISS returned chunk that was not found in database | chunk_id=999
-2026-09-24 11:26:42,239 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=2
-2026-09-24 11:26:42,239 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.95}, {'chunk_id': 20, 'score': 0.9}]
-2026-09-24 11:26:42,239 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=2
-2026-09-24 11:26:42,240 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:26:42,240 | INFO | app.services.knowledge.retrieval_service | Skipping duplicate chunk | chunk_id=20
-2026-09-24 11:26:42,244 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='test' | top_k=5 | results=2
-2026-09-24 11:26:42,244 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 20, 'score': 0.95}, {'chunk_id': 10, 'score': 0.9}]
-2026-09-24 11:26:42,244 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=2
-2026-09-24 11:26:42,245 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:26:42,245 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=2
-2026-09-24 11:26:42,265 | INFO | app.services.knowledge.ingestion_service | extract_text: %s | {'document_filename': 'test.pdf'}
-2026-09-24 11:26:42,265 | INFO | app.services.knowledge.ingestion_service | Document text extracted | {'document_filename': 'test.pdf', 'page_count': 1}
-2026-09-24 11:26:42,409 | WARNING | app.core.exception_handlers | Application error | path=/documents/upload | message=File type '.exe' is not allowed
-2026-09-24 11:26:42,615 | INFO | app.services.document_service | retry document id:8
-2026-09-24 11:26:42,619 | INFO | app.services.document_service | retry document id:8, attempt_count:1
-2026-09-24 11:26:42,641 | INFO | app.services.document_service | retry document id:9
-2026-09-24 11:26:42,658 | INFO | app.services.document_service | get recover documents:[<app.database.models.document.Document object at 0x000001B1395974D0>]
-2026-09-24 11:29:17,430 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=1
-2026-09-24 11:29:17,431 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.91}]
-2026-09-24 11:29:17,431 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=1
-2026-09-24 11:29:17,431 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:29:17,435 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=2
-2026-09-24 11:29:17,435 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.91}, {'chunk_id': 20, 'score': 0.72}]
-2026-09-24 11:29:17,436 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=1
-2026-09-24 11:29:17,436 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:29:17,441 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='Some question?' | top_k=5 | results=1
-2026-09-24 11:29:17,441 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.5}]
-2026-09-24 11:29:17,442 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=0
-2026-09-24 11:29:17,442 | INFO | app.services.knowledge.retrieval_service | No relevant chunks found for query
-2026-09-24 11:29:17,446 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What information is available?' | top_k=5 | results=1
-2026-09-24 11:29:17,447 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 999, 'score': 0.95}]
-2026-09-24 11:29:17,447 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=1
-2026-09-24 11:29:17,447 | WARNING | app.services.knowledge.retrieval_service | FAISS returned chunk that was not found in database | chunk_id=999
-2026-09-24 11:29:17,450 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=2
-2026-09-24 11:29:17,450 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.95}, {'chunk_id': 20, 'score': 0.9}]
-2026-09-24 11:29:17,450 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=2
-2026-09-24 11:29:17,451 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:29:17,451 | INFO | app.services.knowledge.retrieval_service | Skipping duplicate chunk | chunk_id=20
-2026-09-24 11:29:17,455 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='test' | top_k=5 | results=2
-2026-09-24 11:29:17,456 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 20, 'score': 0.95}, {'chunk_id': 10, 'score': 0.9}]
-2026-09-24 11:29:17,456 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=2
-2026-09-24 11:29:17,456 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-09-24 11:29:17,456 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=2
-2026-09-24 11:29:17,488 | INFO | app.services.knowledge.ingestion_service | extract_text: %s | {'document_filename': 'test.pdf'}
-2026-09-24 11:29:17,488 | INFO | app.services.knowledge.ingestion_service | Document text extracted | {'document_filename': 'test.pdf', 'page_count': 1}
-2026-09-24 11:29:17,557 | WARNING | app.core.exception_handlers | Application error | path=/documents/upload | message=File type '.exe' is not allowed
-2026-09-24 11:29:17,659 | INFO | app.services.document_service | retry document id:8
-2026-09-24 11:29:17,662 | INFO | app.services.document_service | retry document id:8, attempt_count:1
-2026-09-24 11:29:17,680 | INFO | app.services.document_service | retry document id:9
-2026-09-24 11:29:17,787 | INFO | app.services.document_service | get recover documents:[<app.database.models.document.Document object at 0x0000015B7F8F75C0>]
+2026-09-28 13:39:44,542 | WARNING | app.core.exception_handlers | Request validation failed | path=/auth/login | errors=1
+2026-09-28 13:39:50,705 | WARNING | app.core.exception_handlers | Request validation failed | path=/auth/login | errors=1
+2026-09-28 13:39:55,641 | WARNING | app.core.exception_handlers | Request validation failed | path=/auth/login | errors=1
+2026-09-28 13:40:27,524 | WARNING | app.core.exception_handlers | Request validation failed | path=/auth/login | errors=1
+2026-09-28 15:51:02,110 | ERROR | app.core.exception_handlers | Unexpected application error | path=/documents/20
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 481, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\dependencies\utils.py", line 676, in solve_dependencies
+    solved = await run_in_threadpool(call, **solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\dependencies\authorization.py", line 18, in dependency
+    with get_db_session() as session:
+         ~~~~~~~~~~~~~~^^
+TypeError: 'generator' object does not support the context manager protocol
+2026-09-28 15:56:51,294 | ERROR | app.core.exception_handlers | Unexpected application error | path=/documents/20
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 481, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\dependencies\utils.py", line 676, in solve_dependencies
+    solved = await run_in_threadpool(call, **solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\dependencies\authorization.py", line 24, in dependency
+    if not service.has_permission(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        current_user,
+        ^^^^^^^^^^^^^
+        permission,
+        ^^^^^^^^^^^
+    ):
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\services\auth\authorization_service.py", line 17, in has_permission
+    print(list(User))
+          ~~~~^^^^^^
+TypeError: 'DeclarativeAttributeIntercept' object is not iterable
+2026-09-28 15:57:19,729 | ERROR | app.core.exception_handlers | Unexpected application error | path=/documents/20
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 481, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\dependencies\utils.py", line 676, in solve_dependencies
+    solved = await run_in_threadpool(call, **solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\dependencies\authorization.py", line 24, in dependency
+    if not service.has_permission(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        current_user,
+        ^^^^^^^^^^^^^
+        permission,
+        ^^^^^^^^^^^
+    ):
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\services\auth\authorization_service.py", line 17, in has_permission
+TypeError: 'DeclarativeAttributeIntercept' object is not iterable
+2026-09-28 16:05:23,366 | ERROR | app.core.exception_handlers | Unexpected application error | path=/documents/20
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 481, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\dependencies\utils.py", line 676, in solve_dependencies
+    solved = await run_in_threadpool(call, **solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\dependencies\authorization.py", line 24, in dependency
+    if not service.has_permission(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        current_user,
+        ^^^^^^^^^^^^^
+        permission,
+        ^^^^^^^^^^^
+    ):
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\services\auth\authorization_service.py", line 17, in has_permission
+    print(dict(user.roles))
+          ~~~~^^^^^^^^^^^^
+TypeError: cannot convert dictionary update sequence element #0 to a sequence
+2026-09-28 16:19:19,542 | ERROR | app.core.exception_handlers | Unexpected application error | path=/documents/20
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\routes\documents.py", line 79, in delete_document
+    service.delete_document(document_id)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\services\document_service.py", line 334, in delete_document
+    self.vector_service.delete_embeddings(
+    ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'DocumentService' object has no attribute 'vector_service'
+2026-09-28 16:37:45,835 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is environment' | top_k=5 | results=5
+2026-09-28 16:37:45,836 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 9, 'score': 0.36246398091316223}, {'chunk_id': 18, 'score': 0.3158316910266876}, {'chunk_id': 22, 'score': 0.27619296312332153}, {'chunk_id': 21, 'score': 0.262836217880249}, {'chunk_id': 23, 'score': 0.25477737188339233}]
+2026-09-28 16:37:45,836 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.3 | before=5 | after=2
+2026-09-28 16:37:45,838 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
+2026-09-28 16:37:45,839 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=2

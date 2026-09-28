@@ -3,8 +3,14 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from app.database.base import Base
+from app.database.models.user import User
 from app.database.models.document import Document
 from app.database.models.document_chunk import DocumentChunk
+from app.database.models.permission import Permission
+from app.database.models.revoked_token import RevokedToken
+from app.database.models.role import Role
+from app.database.models.role_permission import RolePermission
+from app.database.models.user_role import UserRole
 from app.core.config import settings
 
 from alembic import context

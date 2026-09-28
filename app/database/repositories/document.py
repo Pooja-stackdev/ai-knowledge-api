@@ -118,3 +118,9 @@ class DocumentRepository:
         return list(
             self.db.scalars(statement).all()
         )
+
+    def delete(
+        self,
+        document: Document,
+    ) -> None:
+        self.db.delete(document)

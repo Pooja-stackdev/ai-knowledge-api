@@ -23,6 +23,11 @@ async def app_exception_handler(
     errors and are returned to the client using their configured
     HTTP status code and error details.
     """
+    headers = {}
+
+    if exc.status_code == 401:
+        headers["WWW-Authenticate"] = "Bearer"
+
     logger.warning(
         "Application error | path=%s | message=%s",
         request.url.path,
@@ -31,6 +36,7 @@ async def app_exception_handler(
 
     return JSONResponse(
         status_code=exc.status_code,
+        headers=headers,
         content=error_response(
             message=exc.message,
             errors=exc.details,

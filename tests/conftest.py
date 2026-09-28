@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -5,9 +7,11 @@ from sqlalchemy.orm import sessionmaker
 
 from app.application.document_worker_service import DocumentWorkerService
 from app.core.config import settings
+from app.core.security import create_access_token, create_refresh_token, hash_password
 from app.database.base import Base
 from app.database.connection import get_db_session
 from app.database.models.document import Document
+from app.database.models.user import User
 from app.database.repositories.document import (
     DocumentRepository,
 )
@@ -101,3 +105,45 @@ def document_worker_service(db_session):
         repository=repository,
         storage=None,
     )
+
+
+@pytest.fixture
+def active_user(db_session):
+    user = User(
+        email=f"auth-test-{uuid4().hex}@example.com",
+        password_hash=hash_password("Test@123456"),
+        is_active=True,
+    )
+
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+
+    return user
+
+
+@pytest.fixture
+def inactive_user(db_session):
+    user = User(
+        email=f"inactive-{uuid4().hex}@example.com",
+        password_hash=hash_password("Test@123456"),
+        is_active=False,
+    )
+
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+
+    return user
+
+
+@pytest.fixture
+def access_token(active_user):
+    token, _ = create_access_token(active_user.id)
+    return token
+
+
+@pytest.fixture
+def refresh_token(active_user):
+    token, _ = create_refresh_token(active_user.id)
+    return token

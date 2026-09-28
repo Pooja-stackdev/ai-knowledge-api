@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 from sqlalchemy.orm import Session
 
@@ -15,6 +16,7 @@ from app.domain.enums.document import DocumentStatus
 from app.domain.validators.document_lifecycle import validate_transition
 from app.domain.validators.document_validator import DocumentValidator
 from app.exceptions.common import ResourceNotFoundException
+from app.services.knowledge.vector_service import VectorService
 from app.storage.local_storage import LocalFileStorage
 
 logger = logging.getLogger(__name__)
@@ -28,17 +30,27 @@ class DocumentService:
         repository: DocumentRepository,
         storage: LocalFileStorage,
         chunk_repository: DocumentChunkRepository,
+        vector_service: VectorService,
     ):
         self.db = db
         self.repository = repository
         self.storage = storage
         self.chunk_repository = chunk_repository
+        self.vector_service = vector_service
 
     def get_document(
         self,
         document_id: int,
     ) -> Document | None:
-        return self.repository.get_by_id(document_id)
+        document = self.repository.get_by_id(document_id)
+
+        if document is None:
+            raise ResourceNotFoundException(
+                resource="Document",
+                resource_id=document_id,
+            )
+        
+        return document
     
 
     async def upload_document(
@@ -310,3 +322,34 @@ class DocumentService:
             except Exception:
                 self.db.rollback()
                 raise
+
+
+    def delete_document(self, document_id: int) -> None:
+        document = self.get_document(document_id)
+
+        chunks = self.chunk_repository.get_by_document_id(
+            document_id,
+        )
+
+        chunk_ids = [chunk.id for chunk in chunks]
+
+        try:
+            self.vector_service.delete_embeddings(
+                chunk_ids,
+            )
+
+            self.chunk_repository.delete_by_document_id(
+                document_id,
+            )
+
+            self.repository.delete(document)
+
+            self.db.commit()
+
+            self.storage.delete(
+                Path(document.storage_path),
+            )
+
+        except Exception:
+            self.db.rollback()
+            raise
