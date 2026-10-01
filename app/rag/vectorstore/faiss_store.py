@@ -93,9 +93,10 @@ class FaissVectorStore:
         self,
         embedding: Sequence[float],
         top_k: int = 5,
+        allowed_ids: set[int] | None = None,
     ) -> list[tuple[int, float]]:
 
-        if top_k <= 0: 
+        if top_k <= 0 or self.index.ntotal == 0:
             return []
 
         vector = np.asarray(
@@ -109,9 +110,13 @@ class FaissVectorStore:
                 "FAISS index dimension." 
             )
 
+        # IndexFlatIP does not support metadata filtering.
+        # Search all vectors, then apply the authorization filter.
+        search_k = self.index.ntotal if allowed_ids is not None else top_k
+
         scores, ids = self.index.search(
             vector,
-            top_k,
+            search_k,
         )
 
         results: list[tuple[int, float]] = []
@@ -129,6 +134,10 @@ class FaissVectorStore:
                     float(score),
                 )
             )
+
+            if len(results) >= top_k:
+                break
+
 
         return results
 

@@ -3,7 +3,6 @@ import logging
 from app.database.models.document import Document
 from app.exceptions import AppException
 
-
 logger = logging.getLogger(__name__)
 
 class DocumentWorkerService:

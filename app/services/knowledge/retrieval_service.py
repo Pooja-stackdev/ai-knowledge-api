@@ -1,6 +1,7 @@
 import logging
 
 from app.core.config import settings
+from app.database.repositories.document import DocumentRepository
 from app.database.repositories.document_chunk import (
     DocumentChunkRepository,
 )
@@ -19,11 +20,13 @@ class RetrievalService:
         embedding_service: EmbeddingService,
         vector_store: VectorStore,
         chunk_repository: DocumentChunkRepository,
+        document_repository: DocumentRepository,
         score_threshold: float | None = None,
     ) -> None:
         self.embedding_service = embedding_service
         self.vector_store = vector_store
         self.chunk_repository = chunk_repository
+        self.document_repository = document_repository
         self.score_threshold = (
             settings.retrieval_score_threshold
             if score_threshold is None
@@ -33,15 +36,43 @@ class RetrievalService:
     def retrieve(
         self,
         query: str,
+        role_ids: list[int],
         top_k: int = 5,
     ) -> list[RetrievedChunk]:
         """Find the most relevant document chunks for a query."""
+
+        accessible_document_ids = (
+            self.document_repository.get_accessible_document_ids(
+                role_ids=role_ids,
+            )
+        )
+
+        if not accessible_document_ids:
+            logger.info(
+                "No accessible documents | role_ids=%s",
+                role_ids,
+            )
+            return []
+
+        allowed_chunk_ids = set(
+            self.chunk_repository.get_ids_by_document_ids(
+                accessible_document_ids
+            )
+        )
+
+        if not allowed_chunk_ids:
+            logger.info(
+                "No accessible document chunks | documents=%d",
+                len(accessible_document_ids),
+            )
+            return []
 
         query_embedding = self.embedding_service.embed_query(query)
 
         matches = self.vector_store.search(
             embedding=query_embedding,
             top_k=top_k,
+            allowed_ids=allowed_chunk_ids,
         )
 
         logger.info( 

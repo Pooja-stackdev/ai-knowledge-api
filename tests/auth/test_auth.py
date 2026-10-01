@@ -3,8 +3,8 @@
 def test_login_success(client, active_user):
     response = client.post(
         "/auth/login",
-        json={
-            "email": active_user.email,
+        data={
+            "username": active_user.email,
             "password": "Test@123456",
         },
     )
@@ -23,40 +23,42 @@ def test_login_success(client, active_user):
 def test_login_with_invalid_password(client, active_user):
     response = client.post(
         "/auth/login",
-        json={
-            "email": active_user.email,
+        data={
+            "username": active_user.email,
             "password": "WrongPassword@123",
         },
     )
 
+    print("STATUS:", response.status_code)
+    print("RESPONSE:", response.json())
     assert response.status_code == 401
-    assert response.json()["detail"]
+    assert response.json()["message"] == "Could not validate credentials."
 
 
 def test_login_with_unknown_user(client):
     response = client.post(
         "/auth/login",
-        json={
-            "email": "does-not-exist@example.com",
+        data={
+            "username": "does-not-exist@example.com",
             "password": "Test@123456",
         },
     )
 
     assert response.status_code == 401
-    assert response.json()["detail"]
+    assert response.json()["message"] == "Could not validate credentials."
 
 
 def test_login_with_inactive_user(client, inactive_user):
     response = client.post(
         "/auth/login",
-        json={
-            "email": inactive_user.email,
+        data={
+            "username": inactive_user.email,
             "password": "Test@123456",
         },
     )
 
     assert response.status_code == 401
-    assert response.json()["detail"]
+    assert response.json()["message"] == "Could not validate credentials."
 
 
 def test_get_current_user_success(
@@ -84,7 +86,7 @@ def test_get_current_user_without_token(client):
 
     assert response.status_code == 401
 
-    assert response.json()["detail"] == "Not authenticated"
+    assert response.json()["message"] == "Unauthorized."
 
 
 def test_get_current_user_with_invalid_token(client):
@@ -97,7 +99,7 @@ def test_get_current_user_with_invalid_token(client):
 
     assert response.status_code == 401
 
-    assert response.json()["detail"] == "Could not validate credentials"
+    assert response.json()["message"] == "Unauthorized."
 
 
 def test_get_current_user_with_refresh_token(
@@ -116,7 +118,7 @@ def test_get_current_user_with_refresh_token(
     )
 
     assert response.status_code == 401
-    assert response.json()["detail"] == "Could not validate credentials"
+    assert response.json()["message"] == "Invalid access token."
 
 
 def test_get_current_user_with_invalid_user_id(client):
@@ -132,7 +134,7 @@ def test_get_current_user_with_invalid_user_id(client):
     )
 
     assert response.status_code == 401
-    assert response.json()["detail"] == "Could not validate credentials"
+    assert response.json()["message"] == "Could not validate credentials."
 
 
 def test_refresh_token_success(
@@ -165,7 +167,7 @@ def test_refresh_with_invalid_token(client):
     )
 
     assert response.status_code == 401
-    assert response.json()["detail"] == "Invalid refresh token"
+    assert response.json()["message"] == "Invalid refresh token"
 
 
 def test_logout_success(

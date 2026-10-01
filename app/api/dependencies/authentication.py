@@ -11,11 +11,12 @@ from app.database.models.user import User
 from app.database.repositories.auth_repository import AuthRepository
 from app.database.repositories.user_repository import UserRepository
 from app.exceptions.auth import AuthenticationException
+from app.exceptions.common import ResourceNotFoundException
 from app.services.auth.auth_service import AuthService
-
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login",
+    auto_error=False,
 )
 
 
@@ -35,12 +36,18 @@ AuthServiceDependency = Annotated[
 ]
 
 
+
 def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     db: Annotated[Session, Depends(get_db_session)],
 ) -> User:
 
     try:
+        if token is None:
+            raise AuthenticationException(
+                "Unauthorized.",
+            )
+
         payload = decode_token(token)
 
         if payload.get("type") != "access":
@@ -63,7 +70,7 @@ def get_current_user(
         TypeError,
     ) as exc:
         raise AuthenticationException(
-            "Could not validate credentials.",
+            "Unauthorized.",
         ) from exc
 
     service = get_auth_service(db)
@@ -71,9 +78,14 @@ def get_current_user(
     try:
         return service.get_current_user(user_id)
 
-    except ValueError as exc:
+    except ResourceNotFoundException as exc:
         raise AuthenticationException(
-            "User not found.",
+            "Could not validate credentials.",
+        ) from exc
+
+    except AuthenticationException as exc:
+        raise AuthenticationException(
+            "Unauthorized.",
         ) from exc
 
 

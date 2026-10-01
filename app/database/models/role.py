@@ -3,10 +3,11 @@ from typing import TYPE_CHECKING
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.database.base import Base
+from app.database.models.base import Base
 from app.database.models.timestamp_mixin import TimestampMixin
 
 if TYPE_CHECKING:
+    from app.database.models.document import Document
     from app.database.models.permission import Permission
     from app.database.models.user import User
 
@@ -42,4 +43,9 @@ class Role(TimestampMixin, Base):
         back_populates="roles",
         lazy="selectin",
         
+    )
+
+    documents: Mapped[list["Document"]] = relationship(
+        secondary="document_roles",
+        back_populates="roles",
     )

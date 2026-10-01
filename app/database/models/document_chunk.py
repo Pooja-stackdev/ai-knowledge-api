@@ -2,7 +2,7 @@
 from sqlalchemy import ForeignKey, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.database.base import Base
+from app.database.models.base import Base
 from app.database.models.timestamp_mixin import TimestampMixin
 
 

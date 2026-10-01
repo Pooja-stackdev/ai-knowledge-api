@@ -85,3 +85,19 @@ class DocumentChunkRepository:
 
         for chunk in chunks:
             self.db.delete(chunk)
+
+
+    def get_ids_by_document_ids(
+        self,
+        document_ids: list[int],
+    ) -> list[int]:
+        if not document_ids:
+            return []
+
+        return list(
+            self.db.scalars(
+                select(DocumentChunk.id).where(
+                    DocumentChunk.document_id.in_(document_ids)
+                )
+            )
+        )

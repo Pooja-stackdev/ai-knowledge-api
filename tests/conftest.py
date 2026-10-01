@@ -2,16 +2,20 @@ from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
 from app.application.document_worker_service import DocumentWorkerService
 from app.core.config import settings
 from app.core.security import create_access_token, create_refresh_token, hash_password
-from app.database.base import Base
 from app.database.connection import get_db_session
+from app.database.models.base import Base
 from app.database.models.document import Document
+from app.database.models.permission import Permission
+from app.database.models.role import Role
+from app.database.models.role_permission import RolePermission
 from app.database.models.user import User
+from app.database.models.user_role import UserRole
 from app.database.repositories.document import (
     DocumentRepository,
 )
@@ -20,7 +24,7 @@ from app.database.repositories.document_chunk import (
 )
 from app.domain.enums.document import DocumentStatus
 from app.main import app
-from app.services.document_service import DocumentService
+from app.services.knowledge.document_service import DocumentService
 
 test_engine = create_engine(
     settings.test_database_url,
@@ -32,6 +36,10 @@ TestSessionLocal = sessionmaker(
     autoflush=False,
     autocommit=False,
 )
+
+class FakeVectorService:
+    def delete_document_vectors(self, document_id: int) -> None:
+        pass
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -86,7 +94,6 @@ def document(db_session):
 @pytest.fixture
 def document_service(db_session):
     repository = DocumentRepository(db_session)
-
     chunk_repository = DocumentChunkRepository(db_session)
 
     return DocumentService(
@@ -94,6 +101,7 @@ def document_service(db_session):
         repository=repository,
         storage=None,
         chunk_repository=chunk_repository,
+        vector_service=FakeVectorService(),
     )
 
 @pytest.fixture
@@ -147,3 +155,196 @@ def access_token(active_user):
 def refresh_token(active_user):
     token, _ = create_refresh_token(active_user.id)
     return token
+
+
+@pytest.fixture
+def permission_1(db_session):
+    permission = db_session.scalar(
+        select(Permission).where(
+            Permission.name == "test.document.read"
+        )
+    )
+
+    if permission is None:
+        permission = Permission(
+            name="test.document.read",
+            description="Test document read permission",
+        )
+        db_session.add(permission)
+        db_session.commit()
+        db_session.refresh(permission)
+
+    return permission
+
+
+@pytest.fixture
+def permission_2(db_session):
+    permission = db_session.scalar(
+        select(Permission).where(
+            Permission.name == "test.query.execute"
+        )
+    )
+
+    if permission is None:
+        permission = Permission(
+            name="test.query.execute",
+            description="Test query execute permission",
+        )
+        db_session.add(permission)
+        db_session.commit()
+        db_session.refresh(permission)
+
+    return permission
+
+@pytest.fixture
+def upload_user(db_session):
+    permission = db_session.scalar(
+        select(Permission).where(
+            Permission.name == "document.create"
+        )
+    )
+
+    if permission is None:
+        permission = Permission(
+            name="document.create",
+            description="Upload documents",
+        )
+        db_session.add(permission)
+        db_session.flush()
+
+    role = Role(
+        name=f"upload-role-{uuid4().hex[:8]}",
+        description="Test upload role",
+    )
+
+    db_session.add(role)
+    db_session.flush()
+
+    db_session.add(
+        RolePermission(
+            role_id=role.id,
+            permission_id=permission.id,
+        )
+    )
+
+    user = User(
+        email=f"upload-{uuid4().hex}@example.com",
+        password_hash=hash_password("Test@123456"),
+        is_active=True,
+    )
+
+    db_session.add(user)
+    db_session.flush()
+
+    db_session.add(
+        UserRole(
+            user_id=user.id,
+            role_id=role.id,
+        )
+    )
+
+    db_session.commit()
+    db_session.refresh(user)
+
+    return user
+
+@pytest.fixture
+def upload_access_token(upload_user):
+    token, _ = create_access_token(upload_user.id)
+    return token
+
+@pytest.fixture
+def admin_role(
+    db_session,
+    admin_permissions,
+):
+    role = db_session.scalar(
+        select(Role).where(Role.name == "admin")
+    )
+
+    if role is None:
+        role = Role(
+            name="admin",
+            description="System administrator",
+        )
+        db_session.add(role)
+        db_session.flush()
+
+    for permission in admin_permissions:
+        exists = db_session.scalar(
+            select(RolePermission).where(
+                RolePermission.role_id == role.id,
+                RolePermission.permission_id == permission.id,
+            )
+        )
+
+        if exists is None:
+            db_session.add(
+                RolePermission(
+                    role_id=role.id,
+                    permission_id=permission.id,
+                )
+            )
+
+    db_session.commit()
+    db_session.refresh(role)
+
+    return role
+
+@pytest.fixture
+def admin_user(db_session, admin_role):
+    user = User(
+        email=f"admin-{uuid4().hex}@example.com",
+        password_hash=hash_password("Admin@123456"),
+        is_active=True,
+    )
+
+    db_session.add(user)
+    db_session.flush()
+
+    db_session.add(
+        UserRole(
+            user_id=user.id,
+            role_id=admin_role.id,
+        )
+    )
+
+    db_session.commit()
+    db_session.refresh(user)
+
+    return user
+
+@pytest.fixture
+def admin_access_token(admin_user):
+    token, _ = create_access_token(admin_user.id)
+    return token
+
+@pytest.fixture
+def admin_permissions(db_session):
+    permission_names = [
+        "user.read",
+        "user.create",
+        "user.update",
+        "user.delete",
+    ]
+
+    permissions = []
+
+    for name in permission_names:
+        permission = db_session.scalar(
+            select(Permission).where(
+                Permission.name == name
+            )
+        )
+
+        if permission is None:
+            permission = Permission(
+                name=name,
+                description=f"{name} permission",
+            )
+            db_session.add(permission)
+            db_session.flush()
+
+        permissions.append(permission)
+
+    return permissions

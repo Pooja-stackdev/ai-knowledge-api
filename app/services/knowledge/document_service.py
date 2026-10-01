@@ -15,7 +15,13 @@ from app.database.repositories.document_chunk import (
 from app.domain.enums.document import DocumentStatus
 from app.domain.validators.document_lifecycle import validate_transition
 from app.domain.validators.document_validator import DocumentValidator
-from app.exceptions.common import ResourceNotFoundException
+from app.exceptions.auth import AuthorizationException
+from app.exceptions.common import (
+    ResourceNotFoundException,
+)
+from app.exceptions.base import (
+    AppException,
+)
 from app.services.knowledge.vector_service import VectorService
 from app.storage.local_storage import LocalFileStorage
 
@@ -41,7 +47,7 @@ class DocumentService:
     def get_document(
         self,
         document_id: int,
-    ) -> Document | None:
+    ) -> Document:
         document = self.repository.get_by_id(document_id)
 
         if document is None:
@@ -49,8 +55,34 @@ class DocumentService:
                 resource="Document",
                 resource_id=document_id,
             )
-        
+
         return document
+
+
+    def get_accessible_document(
+        self,
+        document_id: int,
+        role_ids: list[int],
+    ) -> Document:
+        document = self.repository.get_by_id(document_id)
+
+        if document is None:
+            raise ResourceNotFoundException(
+                resource="Document",
+                resource_id=document_id,
+            )
+
+        accessible_document = self.repository.get_accessible_by_id(
+            document_id=document_id,
+            role_ids=role_ids,
+        )
+
+        if accessible_document is None:
+            raise AuthorizationException(
+                message="You are not authorized to access this document.",
+            )
+
+        return accessible_document
     
 
     async def upload_document(
@@ -93,7 +125,7 @@ class DocumentService:
 
             return document
 
-        except Exception:
+        except AppException:
             self.db.rollback()
 
             stored_path.unlink(missing_ok=True)
@@ -113,7 +145,7 @@ class DocumentService:
 
             return documents
 
-        except Exception:
+        except AppException:
             self.db.rollback()
             raise
 
@@ -155,7 +187,7 @@ class DocumentService:
 
             return document
 
-        except Exception:
+        except AppException:
             self.db.rollback()
             raise
 
@@ -193,7 +225,7 @@ class DocumentService:
 
             return document
 
-        except Exception:
+        except AppException:
             self.db.rollback()
             raise
 
@@ -235,7 +267,7 @@ class DocumentService:
 
             return recovered
 
-        except Exception:
+        except AppException:
             self.db.rollback()
 
             logger.exception("Document recover worker iteration failed")
@@ -270,7 +302,7 @@ class DocumentService:
 
             return database_chunks
 
-        except Exception:
+        except AppException:
             self.db.rollback()
             raise
 
@@ -286,7 +318,7 @@ class DocumentService:
 
             self.db.commit()
 
-        except Exception:
+        except AppException:
             self.db.rollback()
             raise
 
@@ -319,12 +351,16 @@ class DocumentService:
     
                 return document
     
-            except Exception:
+            except AppException:
                 self.db.rollback()
                 raise
 
 
-    def delete_document(self, document_id: int) -> None:
+    def delete_document(
+        self,
+        document_id: int,
+    ) -> None:
+
         document = self.get_document(document_id)
 
         chunks = self.chunk_repository.get_by_document_id(
@@ -334,9 +370,7 @@ class DocumentService:
         chunk_ids = [chunk.id for chunk in chunks]
 
         try:
-            self.vector_service.delete_embeddings(
-                chunk_ids,
-            )
+            self.vector_service.delete_embeddings(chunk_ids)
 
             self.chunk_repository.delete_by_document_id(
                 document_id,
@@ -350,6 +384,14 @@ class DocumentService:
                 Path(document.storage_path),
             )
 
-        except Exception:
+        except AppException:
             self.db.rollback()
             raise
+
+    def get_documents(
+        self,
+        role_ids: list[int],
+    ) -> list[Document]:
+        return self.repository.get_accessible_documents(
+            role_ids=role_ids,
+        )

@@ -41,3 +41,5 @@ class AuthRepository:
                 RevokedToken.expires_at < now,
             )
         )
+
+    

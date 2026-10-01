@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from app.database.models.document import Document
+from app.database.models.document_role import DocumentRole
 from app.domain.enums.document import DocumentStatus
 
 
@@ -124,3 +125,92 @@ class DocumentRepository:
         document: Document,
     ) -> None:
         self.db.delete(document)
+
+
+    def get_accessible_document_ids(
+        self,
+        role_ids: list[int],
+    ) -> list[int]:
+
+        query = (
+            select(Document.id)
+            .outerjoin(
+                DocumentRole,
+                DocumentRole.document_id == Document.id,
+            )
+        )
+
+        if role_ids:
+            query = query.where(
+                or_(
+                    DocumentRole.role_id.is_(None),
+                    DocumentRole.role_id.in_(role_ids),
+                )
+            )
+        else:
+            query = query.where(
+                DocumentRole.role_id.is_(None)
+            )
+
+        return list(
+            self.db.scalars(query).unique()
+        )
+
+
+    def get_accessible_by_id(
+        self,
+        document_id: int,
+        role_ids: list[int],
+    ) -> Document | None:
+
+        statement = (
+            select(Document)
+            .outerjoin(
+                DocumentRole,
+                DocumentRole.document_id == Document.id,
+            )
+            .where(Document.id == document_id)
+        )
+
+        if role_ids:
+            statement = statement.where(
+                or_(
+                    DocumentRole.role_id.is_(None),
+                    DocumentRole.role_id.in_(role_ids),
+                )
+            )
+        else:
+            statement = statement.where(
+                DocumentRole.role_id.is_(None)
+            )
+
+        return self.db.scalar(statement)
+
+    def get_accessible_documents(
+        self,
+        role_ids: list[int],
+    ) -> list[Document]:
+
+        statement = (
+            select(Document)
+            .outerjoin(
+                DocumentRole,
+                DocumentRole.document_id == Document.id,
+            )
+        )
+
+        if role_ids:
+            statement = statement.where(
+                or_(
+                    DocumentRole.role_id.is_(None),
+                    DocumentRole.role_id.in_(role_ids),
+                )
+            )
+        else:
+            statement = statement.where(
+                DocumentRole.role_id.is_(None)
+            )
+
+        statement = statement.distinct()
+
+        return list(self.db.scalars(statement))

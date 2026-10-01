@@ -1,12 +1,15 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.database.base import Base
+from app.database.models.base import Base
 from app.database.models.timestamp_mixin import TimestampMixin
 from app.domain.enums.document import DocumentStatus
 
+if TYPE_CHECKING:
+    from app.database.models.role import Role
 
 class Document(Base,TimestampMixin):
     __tablename__ = "documents"
@@ -55,4 +58,9 @@ class Document(Base,TimestampMixin):
     last_error: Mapped[str | None] = mapped_column(
         Text,
         nullable=True,
+    )
+
+    roles: Mapped[list["Role"]] = relationship(
+        secondary="document_roles",
+        back_populates="documents",
     )

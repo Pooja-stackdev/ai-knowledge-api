@@ -15,22 +15,25 @@ class FakeRetrievalService:
     def retrieve(
         self,
         query: str,
+        role_ids:list[int],
         top_k: int = 5,
     ):
         return self.chunks
 
-def test_query_rejects_whitespace_only(client):
+def test_query_rejects_whitespace_only(client,access_token):
     response = client.post(
         "/query",
         json={"query": "   "},
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert response.status_code == 422
 
-def test_query_rejects_query_over_max_length(client):
+def test_query_rejects_query_over_max_length(client,access_token):
     response = client.post(
         "/query",
         json={"query": "a" * 2001},
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert response.status_code == 422
@@ -60,7 +63,8 @@ def test_query_returns_answer_and_sources():
     )
 
     result = service.query(
-        query="How long do I have to request a refund?"
+        query="How long do I have to request a refund?",
+        role_ids=[1]
     )
 
     assert result.answer == (
@@ -95,7 +99,8 @@ def test_query_sends_context_to_llm():
     )
 
     service.query(
-        query="How long do I have to request a refund?"
+        query="How long do I have to request a refund?",
+        role_ids=[1]
     )
 
     assert len(llm_provider.calls) == 1
@@ -118,7 +123,8 @@ def test_query_does_not_call_llm_when_no_context():
     )
 
     result = service.query(
-        query="What is the refund policy?"
+        query="What is the refund policy?",
+        role_ids=[1]
     )
 
     assert result.sources == []
@@ -160,7 +166,8 @@ def test_query_returns_multiple_sources():
     )
 
     result = service.query(
-        query="What is the refund policy?"
+        query="What is the refund policy?",
+        role_ids=[1]
     )
 
     assert len(result.sources) == 2
@@ -187,6 +194,9 @@ def test_query_rejects_empty_query():
     )
 
     with pytest.raises(ValueError, match="Query cannot be empty"):
-        service.query(query="   ")
+        service.query(
+            query="   ",
+            role_ids=[1],
+        )
 
     assert len(llm_provider.calls) == 0

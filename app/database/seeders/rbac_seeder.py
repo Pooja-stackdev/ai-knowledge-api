@@ -42,20 +42,24 @@ PERMISSIONS = [
         "description": "Delete users",
     },
     {
-        "name": "role:read",
+        "name": "role.read",
         "description": "View roles",
     },
     {
-        "name": "role:create",
+        "name": "role.create",
         "description": "Create roles",
     },
     {
-        "name": "role:update",
+        "name": "role.update",
         "description": "Update roles",
     },
     {
-        "name": "role:delete",
+        "name": "role.delete",
         "description": "Delete roles",
+    },
+    {
+        "name": "document.access.manage",
+        "description": "Manage role access to documents",
     },
 ]
 
@@ -73,10 +77,11 @@ ROLES = [
             "user.create",
             "user.update",
             "user.delete",
-            "role:read",
-            "role:create",
-            "role:update",
-            "role:delete",
+            "role.read",
+            "role.create",
+            "role.update",
+            "role.delete",
+            "document.access.manage",
         ],
     },
     {

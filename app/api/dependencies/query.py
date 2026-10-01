@@ -6,6 +6,9 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.database.connection import get_db_session
+from app.database.repositories.document import (
+    DocumentRepository,
+)
 from app.database.repositories.document_chunk import (
     DocumentChunkRepository,
 )
@@ -48,10 +51,12 @@ def get_vector_service() -> EmbeddingService:
 def get_retrieval_service(
     db: Annotated[Session, Depends(get_db_session)],
 ) -> RetrievalService:
+    
     return RetrievalService(
         embedding_service=get_embedding_service(),
         vector_store=get_vector_store(),
         chunk_repository=DocumentChunkRepository(db),
+        document_repository=DocumentRepository(db),
     )
 
 

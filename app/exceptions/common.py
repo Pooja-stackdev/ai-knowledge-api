@@ -12,7 +12,7 @@ class ResourceNotFoundException(AppException):
         resource_id: int | str,
     ) -> None:
         super().__init__(
-            message=f"{resource} with id '{resource_id}' not found",
+            message=f"{resource} not found",
             status_code=404,
         )
 
@@ -72,3 +72,16 @@ class ForbiddenException(AppException):
             status_code=403,
         )
 
+class BadRequestException(AppException):
+    """Raised when the request violates a business rule."""
+
+    def __init__(
+        self,
+        message: str,
+        details: list[str] | dict | None = None,
+    ) -> None:
+        super().__init__(
+            message=message,
+            status_code=400,
+            details=details,
+        )

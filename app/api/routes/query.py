@@ -2,7 +2,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from app.api.dependencies.authorization import require_permission
+from app.api.dependencies.authorization import (
+    get_current_user_role_ids,
+    require_permission,
+)
 from app.api.dependencies.query import get_query_service
 from app.database.models.user import User
 from app.schemas.query import QueryRequest, QueryResponse, SourceResponse
@@ -31,12 +34,17 @@ CurrentUserDep = Annotated[
 async def query_knowledge_base(
     request: QueryRequest,
     service: QueryServiceDep,
-    current_user: CurrentUserDep,
+    # current_user: CurrentUserDep,
+    role_ids: Annotated[
+        list[int],
+        Depends(get_current_user_role_ids),
+    ],
 ) -> QueryResponse:
     """Execute a knowledge-base query for an authorized user."""
     result = service.query(
         query=request.query,
         top_k=request.top_k,
+        role_ids=role_ids,
     )
 
     return QueryResponse(

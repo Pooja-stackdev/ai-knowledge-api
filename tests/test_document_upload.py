@@ -7,7 +7,7 @@ from app.domain.enums.document import DocumentStatus
 from app.exceptions import AppException
 
 
-def test_upload_document_success(client):
+def test_upload_document_success(client, upload_access_token):
     response = client.post(
         "/documents/upload",
         files={
@@ -20,10 +20,13 @@ def test_upload_document_success(client):
         data={
             "description": "Test document",
         },
+        headers={
+            "Authorization": f"Bearer {upload_access_token}",
+        },
     )
 
     assert response.status_code == 201
-
+    
     data = response.json()
 
     assert data["filename"] == "test.pdf"
@@ -31,7 +34,7 @@ def test_upload_document_success(client):
     assert data["content_type"] == "application/pdf"
 
 
-def test_upload_invalid_extension(client):
+def test_upload_invalid_extension(client, upload_access_token):
     response = client.post(
         "/documents/upload",
         files={
@@ -41,10 +44,12 @@ def test_upload_invalid_extension(client):
                 "application/octet-stream",
             )
         },
+        headers={
+            "Authorization": f"Bearer {upload_access_token}",
+        },
     )
 
     assert response.status_code == 400
-
 
 def test_pending_to_processing(
     document_service,

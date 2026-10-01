@@ -1,7 +1,7 @@
 from typing import Annotated
 
 import jwt
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.dependencies.authentication import (
@@ -9,6 +9,7 @@ from app.api.dependencies.authentication import (
     CurrentUser,
     oauth2_scheme,
 )
+from app.exceptions.auth import AuthenticationException
 from app.schemas.auth import (
     LogoutRequest,
     RefreshTokenRequest,
@@ -34,17 +35,10 @@ def login(
     ],
     service: AuthServiceDependency,
 ):
-    try:
-        return service.authenticate(
-            email=form_data.username,
-            password=form_data.password,
-        )
-    except ValueError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=str(exc),
-        ) from exc
-
+    return service.authenticate(
+        email=form_data.username,
+        password=form_data.password,
+    )
 
 @router.post(
     "/refresh",
@@ -63,9 +57,8 @@ def refresh_token(
         ValueError,
         TypeError,
     ) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid refresh token",
+        raise AuthenticationException(
+            "Invalid refresh token"
         ) from exc
 
 
@@ -91,9 +84,8 @@ def logout(
         ValueError,
         TypeError,
     ) as exc:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
+        raise AuthenticationException(
+            "Invalid token"
         ) from exc
 
 
@@ -106,23 +98,3 @@ def get_me(
 ):
     return current_user
 
-
-# @router.post(
-#     "/register",
-#     response_model=UserResponse,
-#     status_code=status.HTTP_201_CREATED,
-# )
-# def register(
-#     request: LoginRequest,
-#     service: AuthServiceDependency,
-# ):
-#     try:
-#         return service.create_user(
-#             email=request.email,
-#             password=request.password,
-#         )
-#     except ValueError as exc:
-#         raise HTTPException(
-#             status_code=status.HTTP_409_CONFLICT,
-#             detail=str(exc),
-#         ) from exc

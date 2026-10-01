@@ -6,7 +6,6 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-
 class DocumentWorker:
     def __init__(
         self,
@@ -35,14 +34,14 @@ class DocumentWorker:
 
                 time.sleep(self.poll_interval)
 
-    def run_once(self):
-        self.service.recover_stuck_documents(
-            timeout_minutes=settings.processing_timeout_minutes,
-        )
+    # def run_once(self):
+    #     self.service.recover_stuck_documents(
+    #         timeout_minutes=settings.processing_timeout_minutes,
+    #     )
 
-        documents = self.service.claim_documents(
-            limit=10,
-        )
+    #     documents = self.service.claim_documents(
+    #         limit=10,
+    #     )
 
-        for document in documents:
-            self.process(document)
+    #     for document in documents:
+    #         self.process(document)

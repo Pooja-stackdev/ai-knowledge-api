@@ -6,12 +6,12 @@ from app.core.security import (
     create_access_token,
     create_refresh_token,
     decode_token,
-    hash_password,
     verify_password,
 )
-from app.database.models.user import User
 from app.database.repositories.auth_repository import AuthRepository
 from app.database.repositories.user_repository import UserRepository
+from app.exceptions.auth import AuthenticationException
+from app.exceptions.common import ResourceNotFoundException
 from app.schemas.auth import TokenResponse
 
 
@@ -28,28 +28,21 @@ class AuthService:
         password: str,
     ) -> TokenResponse:
         user = self.user_repository.get_by_email(email)
-        print(f"User--->{user}")
 
-        print("Stored hash:", user.password_hash)
-        print(
-            "Password valid:",
-            verify_password(password, user.password_hash),
-        )
         if user is None:
-            raise ValueError("Invalid email or password")
+            raise AuthenticationException(
+                "Could not validate credentials."
+            )
+
+        if not verify_password(password, user.password_hash):
+            raise AuthenticationException(
+                "Could not validate credentials."
+            )
 
         if not user.is_active:
-            raise ValueError("User account is inactive")
-
-        print("User is active")
-
-        if not verify_password(
-            password,
-            user.password_hash,
-        ):
-            raise ValueError("Invalid email or password")
-
-        print(f"User--->{user}")
+            raise AuthenticationException(
+                "Could not validate credentials."
+            )
 
         user.last_login_at = datetime.now(timezone.utc)
 
@@ -63,6 +56,7 @@ class AuthService:
             refresh_token=refresh_token,
         )
 
+    
     def refresh_access_token(
         self,
         refresh_token: str,
@@ -70,17 +64,17 @@ class AuthService:
         payload = decode_token(refresh_token)
 
         if payload.get("type") != "refresh":
-            raise ValueError("Invalid refresh token")
+            raise AuthenticationException("Invalid refresh token")
 
         user_id = int(payload["sub"])
 
         user = self.user_repository.get_by_id(user_id)
 
         if user is None:
-            raise ValueError("User not found")
+            raise AuthenticationException("User not found")
 
         if not user.is_active:
-            raise ValueError("User account is inactive")
+            raise AuthenticationException("User account is inactive")
 
         access_token, _ = create_access_token(user.id)
         new_refresh_token, _ = create_refresh_token(user.id)
@@ -94,32 +88,17 @@ class AuthService:
         user = self.user_repository.get_by_id(user_id)
 
         if user is None:
-            raise ValueError("User not found")
+            raise ResourceNotFoundException(
+                resource="User",
+                resource_id=user_id
+            )
 
         if not user.is_active:
-            raise ValueError("User account is inactive")
+            raise AuthenticationException("User account is inactive")
 
         return user
 
-    def create_user(
-        self,
-        email: str,
-        password: str,
-    ):
-        existing_user = self.user_repository.get_by_email(email)
-
-        if existing_user is not None:
-            raise ValueError("User already exists")
-
-        user = self.user_repository.create(
-            email=email,
-            password_hash=hash_password(password),
-        )
-
-        self.db.commit()
-
-        return user
-
+   
     def logout(
         self,
         access_token: str,

@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.database.models.role import Role
 from app.database.models.user import User
 
 
@@ -37,3 +38,15 @@ class UserRepository:
         self.db.flush()
 
         return user
+
+    def assign_roles(
+            self,
+            user: User,
+            roles: list[Role],
+        ) -> None:
+            user.roles = roles
+            self.db.flush()
+
+    def delete(self, user: User) -> None:
+        self.db.delete(user)
+        self.db.flush()

@@ -24,11 +24,13 @@ class FakeVectorStore:
         self,
         embedding,
         top_k: int = 5,
+        allowed_ids=None,
     ) -> list[tuple[int, float]]:
         self.search_calls.append(
             {
                 "embedding": embedding,
                 "top_k": top_k,
+                "allowed_ids": allowed_ids,
             }
         )
 
@@ -66,9 +68,7 @@ class FakeChunkRepository:
         self,
         chunk_ids,
     ):
-        self.requested_ids.append(
-            list(chunk_ids)
-        )
+        self.requested_ids.append(list(chunk_ids))
 
         return [
             chunk
@@ -76,23 +76,58 @@ class FakeChunkRepository:
             if chunk.id in chunk_ids
         ]
 
+    def get_ids_by_document_ids(
+        self,
+        document_ids,
+    ):
+        return [
+            chunk.id
+            for chunk in self.chunks
+            if chunk.document_id in document_ids
+        ]
+
+
+class FakeDocumentRepository:
+
+    def __init__(
+        self,
+        accessible_document_ids=None,
+    ):
+        self.accessible_document_ids = (
+            accessible_document_ids
+            if accessible_document_ids is not None
+            else [1, 2, 3]
+        )
+        self.requested_role_ids = []
+
+    def get_accessible_document_ids(
+        self,
+        role_ids,
+    ):
+        self.requested_role_ids.append(list(role_ids))
+
+        return self.accessible_document_ids
+
 
 def create_service(
     *,
     matches,
     chunks,
     score_threshold=0.8,
+    accessible_document_ids=None,
 ):
     return RetrievalService(
         embedding_service=FakeEmbeddingService(),
         vector_store=FakeVectorStore(matches),
         chunk_repository=FakeChunkRepository(chunks),
+        document_repository=FakeDocumentRepository(
+            accessible_document_ids
+        ),
         score_threshold=score_threshold,
     )
 
 
 def test_retrieve_returns_relevant_chunks():
-
     chunks = [
         FakeChunk(
             chunk_id=10,
@@ -112,6 +147,7 @@ def test_retrieve_returns_relevant_chunks():
 
     results = service.retrieve(
         query="What is the refund policy?",
+        role_ids=[],
     )
 
     assert len(results) == 1
@@ -130,7 +166,6 @@ def test_retrieve_returns_relevant_chunks():
 
 
 def test_retrieve_filters_results_below_score_threshold():
-
     chunks = [
         FakeChunk(
             chunk_id=10,
@@ -159,6 +194,7 @@ def test_retrieve_filters_results_below_score_threshold():
 
     results = service.retrieve(
         query="What is the refund policy?",
+        role_ids=[],
     )
 
     assert len(results) == 1
@@ -167,7 +203,6 @@ def test_retrieve_filters_results_below_score_threshold():
 
 
 def test_retrieve_returns_empty_when_all_results_are_below_threshold():
-
     chunks = [
         FakeChunk(
             chunk_id=10,
@@ -184,28 +219,27 @@ def test_retrieve_returns_empty_when_all_results_are_below_threshold():
         ],
     )
 
-    repository = FakeChunkRepository(chunks)
+    chunk_repository = FakeChunkRepository(chunks)
 
     service = RetrievalService(
         embedding_service=FakeEmbeddingService(),
         vector_store=vector_store,
-        chunk_repository=repository,
+        chunk_repository=chunk_repository,
+        document_repository=FakeDocumentRepository(),
         score_threshold=0.80,
     )
 
     results = service.retrieve(
         query="Some question?",
+        role_ids=[],
     )
 
     assert results == []
 
-    # Database should not be queried because
-    # no vector result passed the threshold.
-    assert repository.requested_ids == []
+    assert chunk_repository.requested_ids == []
 
 
 def test_retrieve_skips_chunk_missing_from_database():
-
     chunks = []
 
     service = create_service(
@@ -217,13 +251,13 @@ def test_retrieve_skips_chunk_missing_from_database():
 
     results = service.retrieve(
         query="What information is available?",
+        role_ids=[],
     )
 
     assert results == []
 
 
 def test_retrieve_removes_duplicate_content():
-
     chunks = [
         FakeChunk(
             chunk_id=10,
@@ -251,6 +285,7 @@ def test_retrieve_removes_duplicate_content():
 
     results = service.retrieve(
         query="What is the refund policy?",
+        role_ids=[],
     )
 
     assert len(results) == 1
@@ -259,7 +294,6 @@ def test_retrieve_removes_duplicate_content():
 
 
 def test_retrieve_preserves_vector_store_order():
-
     chunks = [
         FakeChunk(
             chunk_id=10,
@@ -287,6 +321,7 @@ def test_retrieve_preserves_vector_store_order():
 
     results = service.retrieve(
         query="test",
+        role_ids=[],
     )
 
     assert [result.chunk_id for result in results] == [
