@@ -55,6 +55,20 @@ def get_current_user(
                 "Invalid access token.",
             )
 
+        jti = payload.get("jti")
+
+        if not jti:
+            raise AuthenticationException(
+                "Invalid access token.",
+            )
+
+        service = get_auth_service(db)
+
+        if service.auth_repository.is_token_revoked(jti):
+            raise AuthenticationException(
+                "Token has been revoked.",
+            )
+
         user_id = payload.get("sub")
 
         if user_id is None:
@@ -73,8 +87,6 @@ def get_current_user(
             "Unauthorized.",
         ) from exc
 
-    service = get_auth_service(db)
-
     try:
         return service.get_current_user(user_id)
 
@@ -87,7 +99,6 @@ def get_current_user(
         raise AuthenticationException(
             "Unauthorized.",
         ) from exc
-
 
 CurrentUser = Annotated[
     User,

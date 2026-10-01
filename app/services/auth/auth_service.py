@@ -99,28 +99,26 @@ class AuthService:
         return user
 
    
-    def logout(
-        self,
-        access_token: str,
-        refresh_token: str,
-    ) -> None:
-        for token in (access_token, refresh_token):
-            payload = decode_token(token)
+    def logout(self, access_token: str) -> None:
+        payload = decode_token(access_token)
 
-            jti = payload.get("jti")
+        jti = payload.get("jti")
 
-            if not jti:
-                continue
+        if not jti:
+            raise ValueError("Token does not contain jti")
 
-            expires_at = datetime.fromtimestamp(
-                payload["exp"],
-                tz=timezone.utc,
+        expires_at = datetime.fromtimestamp(
+            payload["exp"],
+            tz=timezone.utc,
+        )
+
+        print(self.auth_repository.is_token_revoked(jti))
+        if not self.auth_repository.is_token_revoked(jti):
+            self.auth_repository.revoke_token(
+                jti=jti,
+                expires_at=expires_at,
             )
 
-            if not self.auth_repository.is_token_revoked(jti):
-                self.auth_repository.revoke_token(
-                    jti=jti,
-                    expires_at=expires_at,
-                )
+        print("logout")
 
         self.db.commit()

@@ -11,7 +11,6 @@ from app.api.dependencies.authentication import (
 )
 from app.exceptions.auth import AuthenticationException
 from app.schemas.auth import (
-    LogoutRequest,
     RefreshTokenRequest,
     TokenResponse,
     UserResponse,
@@ -67,7 +66,6 @@ def refresh_token(
     status_code=status.HTTP_204_NO_CONTENT,
 )
 def logout(
-    request: LogoutRequest,
     access_token: Annotated[
         str,
         Depends(oauth2_scheme),
@@ -75,10 +73,7 @@ def logout(
     service: AuthServiceDependency,
 ):
     try:
-        service.logout(
-            access_token=access_token,
-            refresh_token=request.refresh_token,
-        )
+        service.logout(access_token)
     except (
         jwt.InvalidTokenError,
         ValueError,
@@ -87,7 +82,7 @@ def logout(
         raise AuthenticationException(
             "Invalid token"
         ) from exc
-
+    
 
 @router.get(
     "/me",
