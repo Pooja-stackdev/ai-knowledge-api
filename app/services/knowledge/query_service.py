@@ -30,7 +30,7 @@ class QueryService:
         """Answer a query using retrieved knowledge and an LLM."""
 
         if not query.strip():
-            raise ValueError("Query cannot be empty")
+            raise ValueError("query.empty")
     
         chunks = self.retrieval_service.retrieve(
             query=query,

@@ -57,7 +57,7 @@ def refresh_token(
         TypeError,
     ) as exc:
         raise AuthenticationException(
-            "Invalid refresh token"
+            "auth.invalid_refresh_token"
         ) from exc
 
 
@@ -80,7 +80,7 @@ def logout(
         TypeError,
     ) as exc:
         raise AuthenticationException(
-            "Invalid token"
+            "auth.invalid_token"
         ) from exc
     
 

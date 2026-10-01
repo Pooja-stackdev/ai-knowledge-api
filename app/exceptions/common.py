@@ -11,8 +11,15 @@ class ResourceNotFoundException(AppException):
         resource: str,
         resource_id: int | str,
     ) -> None:
+        message_keys = {
+            "document": "document.not_found",
+            "user": "user.not_found",
+            "role": "role.not_found",
+            "roles": "role.not_found",
+            "one or more": "role.not_found",
+        }
         super().__init__(
-            message=f"{resource} not found",
+            message=message_keys.get(resource.lower(), "common.not_found"),
             status_code=404,
         )
 

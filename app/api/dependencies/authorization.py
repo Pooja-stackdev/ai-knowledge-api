@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.api.dependencies.authentication import get_current_user
@@ -9,6 +9,7 @@ from app.database.connection import get_db_session
 from app.database.models.user import User
 from app.database.repositories.role_repository import RoleRepository
 from app.services.auth.authorization_service import AuthorizationService
+from app.exceptions.auth import AuthorizationException
 
 
 def require_permission(
@@ -26,10 +27,7 @@ def require_permission(
             current_user,
             permission,
         ):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Permission denied",
-            )
+            raise AuthorizationException("auth.forbidden")
 
         return current_user
 
@@ -50,10 +48,7 @@ def require_role(
                 current_user,
                 role_name,
             ):
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="Role access denied",
-                )
+                raise AuthorizationException("auth.forbidden")
 
         return current_user
 

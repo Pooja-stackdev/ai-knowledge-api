@@ -1,0 +1,48 @@
+{
+  "common": {
+    "success": "Operation completed successfully.",
+    "not_found": "Resource not found.",
+    "unauthorized": "Unauthorized.",
+    "forbidden": "You do not have permission to perform this action.",
+    "database_error": "An internal database error occurred.",
+    "internal_error": "Internal server error."
+  },
+  "auth": {
+    "unauthorized": "Unauthorized.",
+    "invalid_token": "Invalid authentication token.",
+    "invalid_access_token": "Invalid access token.",
+    "token_revoked": "Token has been revoked.",
+    "credentials_invalid": "Could not validate credentials.",
+    "invalid_refresh_token": "Invalid refresh token",
+    "forbidden": "You do not have permission to perform this action."
+  },
+  "document": {
+    "not_found": "Document not found.",
+    "created": "Document created successfully.",
+    "updated": "Document updated successfully.",
+    "deleted": "Document deleted successfully.",
+    "forbidden": "You are not authorized to access this document."
+  },
+  "user": {
+    "not_found": "User not found.",
+    "created": "User created successfully.",
+    "updated": "User updated successfully.",
+    "deleted": "User deleted successfully."
+  },
+  "validation": {
+    "required": "This field is required.",
+    "invalid": "Invalid value.",
+    "min_length": "This value is too short.",
+    "request_failed": "Request validation failed."
+  },
+  "role": {
+    "not_found": "One or more roles were not found."
+  },
+  "query": {
+    "empty": "Query cannot be empty."
+  },
+  "worker": {
+    "no_usable_chunks": "Document contains no usable chunks.",
+    "embedding_count_mismatch": "Embedding count does not match chunk count."
+  }
+}

@@ -17,6 +17,7 @@ from app.core.exception_handlers import (
     validation_exception_handler,
 )
 from app.core.logging import setup_logging
+from app.core.i18n.middleware import localization_middleware
 from app.exceptions import AppException
 
 setup_logging()
@@ -26,6 +27,8 @@ app = FastAPI(
     title=settings.app_name,
     debug=settings.debug,
 )
+
+app.middleware("http")(localization_middleware)
 
 app.include_router(auth_router)
 app.include_router(document_router)

@@ -31,25 +31,25 @@ class AuthService:
 
         if user is None:
             raise AuthenticationException(
-                "Could not validate credentials."
+                "auth.credentials_invalid"
             )
 
         if not verify_password(password, user.password_hash):
             raise AuthenticationException(
-                "Could not validate credentials."
+                "auth.credentials_invalid"
             )
 
         if not user.is_active:
             raise AuthenticationException(
-                "Could not validate credentials."
+                "auth.credentials_invalid"
             )
 
         user.last_login_at = datetime.now(timezone.utc)
 
         self.db.commit()
 
-        access_token, _ = create_access_token(user.id)
-        refresh_token, _ = create_refresh_token(user.id)
+        access_token, _ = create_access_token(user.id,user.language,)
+        refresh_token, _ = create_refresh_token(user.id,user.language)
 
         return TokenResponse(
             access_token=access_token,
@@ -64,20 +64,20 @@ class AuthService:
         payload = decode_token(refresh_token)
 
         if payload.get("type") != "refresh":
-            raise AuthenticationException("Invalid refresh token")
+            raise AuthenticationException("auth.invalid_refresh_token")
 
         user_id = int(payload["sub"])
 
         user = self.user_repository.get_by_id(user_id)
 
         if user is None:
-            raise AuthenticationException("User not found")
+            raise AuthenticationException("user.not_found")
 
         if not user.is_active:
-            raise AuthenticationException("User account is inactive")
+            raise AuthenticationException("auth.credentials_invalid")
 
-        access_token, _ = create_access_token(user.id)
-        new_refresh_token, _ = create_refresh_token(user.id)
+        access_token, _ = create_access_token(user.id,user.language,)
+        new_refresh_token, _ = create_refresh_token(user.id,user.language)
 
         return TokenResponse(
             access_token=access_token,
@@ -94,7 +94,7 @@ class AuthService:
             )
 
         if not user.is_active:
-            raise AuthenticationException("User account is inactive")
+            raise AuthenticationException("auth.credentials_invalid")
 
         return user
 

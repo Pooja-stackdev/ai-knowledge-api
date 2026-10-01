@@ -44,36 +44,34 @@ def get_current_user(
 
     try:
         if token is None:
-            raise AuthenticationException(
-                "Unauthorized.",
-            )
+            raise AuthenticationException("auth.unauthorized")
 
         payload = decode_token(token)
 
         if payload.get("type") != "access":
             raise AuthenticationException(
-                "Invalid access token.",
+                "auth.invalid_access_token",
             )
 
         jti = payload.get("jti")
 
         if not jti:
             raise AuthenticationException(
-                "Invalid access token.",
+                "auth.invalid_access_token",
             )
 
         service = get_auth_service(db)
 
         if service.auth_repository.is_token_revoked(jti):
             raise AuthenticationException(
-                "Token has been revoked.",
+                "auth.token_revoked",
             )
 
         user_id = payload.get("sub")
 
         if user_id is None:
             raise AuthenticationException(
-                "Invalid authentication token.",
+                "auth.invalid_token",
             )
 
         user_id = int(user_id)
@@ -84,7 +82,7 @@ def get_current_user(
         TypeError,
     ) as exc:
         raise AuthenticationException(
-            "Unauthorized.",
+            "auth.unauthorized",
         ) from exc
 
     try:
@@ -92,12 +90,12 @@ def get_current_user(
 
     except ResourceNotFoundException as exc:
         raise AuthenticationException(
-            "Could not validate credentials.",
+            "auth.credentials_invalid",
         ) from exc
 
     except AuthenticationException as exc:
         raise AuthenticationException(
-            "Unauthorized.",
+            "auth.unauthorized",
         ) from exc
 
 CurrentUser = Annotated[

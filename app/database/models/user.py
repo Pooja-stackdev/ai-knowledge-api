@@ -1,11 +1,12 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, DateTime, String
+from sqlalchemy import Boolean, DateTime, Enum, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.models.base import Base
 from app.database.models.timestamp_mixin import TimestampMixin
+from app.domain.enums.languages import Language
 
 if TYPE_CHECKING:
     from app.database.models.role import Role
@@ -40,6 +41,17 @@ class User(TimestampMixin, Base):
     last_login_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         nullable=True,
+    )
+
+    language: Mapped[Language] = mapped_column(
+        Enum(
+            Language,
+            name="user_language",
+            values_callable=lambda enum: [item.value for item in enum],
+        ),
+        nullable=False,
+        default=Language.EN,
+        server_default=Language.EN.value,
     )
 
     roles: Mapped[list["Role"]] = relationship(

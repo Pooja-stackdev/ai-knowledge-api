@@ -88,7 +88,7 @@ class DocumentWorkerService:
 
             if not chunks:
                 raise AppException(
-                    "Document contains no usable chunks",
+                    "worker.no_usable_chunks",
                 )
 
             database_chunks = self.document_service.save_chunks(
@@ -107,7 +107,7 @@ class DocumentWorkerService:
             
             if len(embeddings) != len(database_chunks):
                 raise AppException(
-                    "Embedding count does not match chunk count",
+                    "worker.embedding_count_mismatch",
                 )
 
             self.vector_service.add_embeddings(

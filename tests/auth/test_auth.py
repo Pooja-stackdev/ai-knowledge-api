@@ -108,7 +108,7 @@ def test_get_current_user_with_refresh_token(
 ):
     from app.core.security import create_refresh_token
 
-    refresh_token, _ = create_refresh_token(active_user.id)
+    refresh_token, _ = create_refresh_token(active_user.id,active_user.language)
 
     response = client.get(
         "/auth/me",

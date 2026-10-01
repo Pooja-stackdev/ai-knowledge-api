@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.exceptions import AppException
+from app.core.i18n import get_message, localize_message
 from app.utils.response import error_response
 
 logger = logging.getLogger(__name__)
@@ -38,7 +39,7 @@ async def app_exception_handler(
         status_code=exc.status_code,
         headers=headers,
         content=error_response(
-            message=exc.message,
+            message=localize_message(exc.message),
             errors=exc.details,
         ),
     )
@@ -56,7 +57,7 @@ async def validation_exception_handler(
     errors = [
         {
             "field": ".".join(str(location) for location in error["loc"]),
-            "message": error["msg"],
+            "message": _localize_validation_error(error),
         }
         for error in exc.errors()
     ]
@@ -70,7 +71,7 @@ async def validation_exception_handler(
     return JSONResponse(
         status_code=422,
         content=error_response(
-            message="Request validation failed",
+            message=get_message("validation.request_failed"),
             errors=errors,
         ),
     )
@@ -93,7 +94,7 @@ async def database_exception_handler(
     return JSONResponse(
         status_code=500,
         content=error_response(
-            message="An internal database error occurred",
+            message=get_message("common.database_error"),
         ),
     )
 
@@ -115,7 +116,17 @@ async def generic_exception_handler(
     return JSONResponse(
         status_code=500,
         content=error_response(
-            message="Internal server error",
+            message=get_message("common.internal_error"),
         ),
     )
+
+
+def _localize_validation_error(error: dict) -> str:
+    """Map stable Pydantic error types to localized client messages."""
+    error_type = error.get("type", "")
+    if error_type == "missing":
+        return get_message("validation.required")
+    if error_type in {"string_too_short", "too_short"}:
+        return get_message("validation.min_length")
+    return get_message("validation.invalid")
 

@@ -79,7 +79,7 @@ class DocumentService:
 
         if accessible_document is None:
             raise AuthorizationException(
-                message="You are not authorized to access this document.",
+                message="document.forbidden",
             )
 
         return accessible_document
