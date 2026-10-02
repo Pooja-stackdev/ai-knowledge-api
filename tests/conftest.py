@@ -11,6 +11,7 @@ from app.core.security import create_access_token, create_refresh_token, hash_pa
 from app.database.connection import get_db_session
 from app.database.models.base import Base
 from app.database.models.document import Document
+from app.database.models.notification_outbox import NotificationOutbox
 from app.database.models.permission import Permission
 from app.database.models.role import Role
 from app.database.models.role_permission import RolePermission

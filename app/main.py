@@ -1,7 +1,8 @@
 """FastAPI application entry point."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
+from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.routes.auth import router as auth_router
@@ -19,6 +20,7 @@ from app.core.exception_handlers import (
 from app.core.logging import setup_logging
 from app.core.i18n.middleware import localization_middleware
 from app.exceptions import AppException
+from app.database.connection import SessionLocal
 
 setup_logging()
 
@@ -29,6 +31,23 @@ app = FastAPI(
 )
 
 app.middleware("http")(localization_middleware)
+
+
+@app.get("/health/live", tags=["Health"])
+def liveness() -> dict[str, str]:
+    """Public liveness probe that does not depend on external services."""
+    return {"status": "ok"}
+
+
+@app.get("/health/ready", tags=["Health"])
+def readiness() -> dict[str, str]:
+    """Public readiness probe that verifies database connectivity."""
+    try:
+        with SessionLocal() as session:
+            session.execute(text("SELECT 1"))
+    except SQLAlchemyError as exc:
+        raise HTTPException(status_code=503, detail="Service unavailable") from exc
+    return {"status": "ready"}
 
 app.include_router(auth_router)
 app.include_router(document_router)

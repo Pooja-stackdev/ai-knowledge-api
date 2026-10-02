@@ -67,5 +67,20 @@ class Settings(BaseSettings):
     llm_max_retries: int = 2
     llm_retry_delay_seconds: float = 1.0
 
+    smtp_enabled: bool = False
+    smtp_host: str | None = None
+    smtp_port: int = Field(default=587, gt=0, le=65535)
+    smtp_username: str | None = None
+    smtp_password: str | None = None
+    smtp_use_tls: bool = True
+    smtp_timeout_seconds: float = Field(default=10.0, gt=0)
+    email_sender_address: str = "no-reply@example.com"
+    email_sender_name: str = "AI Knowledge API"
+    frontend_document_url: str | None = None
+    notification_batch_size: int = Field(default=50, gt=0)
+    notification_max_attempts: int = Field(default=5, gt=0)
+    notification_retry_base_seconds: int = Field(default=60, gt=0)
+    notification_sending_timeout_minutes: int = Field(default=15, gt=0)
+
 
 settings = Settings()

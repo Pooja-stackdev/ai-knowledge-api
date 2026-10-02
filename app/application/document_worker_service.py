@@ -14,12 +14,14 @@ class DocumentWorkerService:
         chunker,
         embedding_service,
         vector_service,
+        notification_service=None,
     ) -> None:
         self.document_service = document_service
         self.ingestion_service = ingestion_service
         self.chunker = chunker
         self.embedding_service = embedding_service
         self.vector_service = vector_service
+        self.notification_service = notification_service
 
     def process_pending_documents(
         self,
@@ -29,7 +31,7 @@ class DocumentWorkerService:
             limit=limit,
         )
 
-        logger.info(f"Processing document :{documents}")
+        logger.info("Claimed documents for processing", extra={"count": len(documents)})
 
         processed_count = 0
 
@@ -122,6 +124,15 @@ class DocumentWorkerService:
                 document,
             )
 
+            if self.notification_service is not None:
+                try:
+                    self.notification_service.enqueue_document_completed(document.id)
+                except Exception:
+                    logger.exception(
+                        "Unable to queue completion notifications",
+                        extra={"document_id": document.id},
+                    )
+
             return True
 
         except (AppException, ValueError) as exc:
@@ -131,6 +142,18 @@ class DocumentWorkerService:
             )
 
             return False
+
+    def dispatch_notifications(self) -> int:
+        """Deliver a bounded batch of queued email notifications."""
+        if self.notification_service is None:
+            return 0
+        return self.notification_service.dispatch_pending()
+
+    def recover_stuck_notification_dispatches(self) -> int:
+        """Release notification jobs abandoned by an interrupted worker."""
+        if self.notification_service is None:
+            return 0
+        return self.notification_service.recover_stuck_dispatches()
 
     def retry_document(
         self,

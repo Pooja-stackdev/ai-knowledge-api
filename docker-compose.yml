@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ai_knowledge
+      POSTGRES_USER: ai_knowledge
+      POSTGRES_PASSWORD: change-me-for-local-use
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_knowledge -d ai_knowledge"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://ai_knowledge:change-me-for-local-use@postgres:5432/ai_knowledge
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./storage:/app/storage
+
+  worker:
+    build: .
+    command: python -m worker.main
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://ai_knowledge:change-me-for-local-use@postgres:5432/ai_knowledge
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./storage:/app/storage
+
+  migrate:
+    build: .
+    command: alembic upgrade head
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://ai_knowledge:change-me-for-local-use@postgres:5432/ai_knowledge
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles: ["tools"]
+
+volumes:
+  postgres_data:
