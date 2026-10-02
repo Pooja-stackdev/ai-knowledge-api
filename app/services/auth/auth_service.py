@@ -48,8 +48,8 @@ class AuthService:
 
         self.db.commit()
 
-        access_token, _ = create_access_token(user.id,user.language,)
-        refresh_token, _ = create_refresh_token(user.id,user.language)
+        access_token, _ = create_access_token(user.id)
+        refresh_token, _ = create_refresh_token(user.id)
 
         return TokenResponse(
             access_token=access_token,
@@ -76,8 +76,8 @@ class AuthService:
         if not user.is_active:
             raise AuthenticationException("auth.credentials_invalid")
 
-        access_token, _ = create_access_token(user.id,user.language,)
-        new_refresh_token, _ = create_refresh_token(user.id,user.language)
+        access_token, _ = create_access_token(user.id)
+        new_refresh_token, _ = create_refresh_token(user.id)
 
         return TokenResponse(
             access_token=access_token,

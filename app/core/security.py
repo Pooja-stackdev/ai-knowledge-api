@@ -8,7 +8,6 @@ import jwt
 from pwdlib import PasswordHash
 
 from app.core.config import settings
-from app.domain.enums.languages import Language
 
 password_hash = PasswordHash.recommended()
 
@@ -29,7 +28,6 @@ def verify_password(
 
 def create_token(
     user_id: int,
-    language: str,
     token_type: Literal["access", "refresh"],
     expires_delta: timedelta,
 ) -> tuple[str, datetime]:
@@ -38,7 +36,6 @@ def create_token(
 
     payload = {
         "sub": str(user_id),
-        "language": language,
         "type": token_type,
         "jti": str(uuid4()),
         "iat": now,
@@ -56,11 +53,9 @@ def create_token(
 
 def create_access_token(
     user_id: int,
-    language: Language = Language.EN,
 ) -> tuple[str, datetime]:
     return create_token(
         user_id=user_id,
-        language=language.value,
         token_type="access",
         expires_delta=timedelta(
             minutes=settings.access_token_expire_minutes,
@@ -70,11 +65,9 @@ def create_access_token(
 
 def create_refresh_token(
     user_id: int,
-    language: Language = Language.EN,
 ) -> tuple[str, datetime]:
     return create_token(
         user_id=user_id,
-        language=language.value,
         token_type="refresh",
         expires_delta=timedelta(
             days=settings.refresh_token_expire_days,

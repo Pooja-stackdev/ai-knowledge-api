@@ -147,13 +147,13 @@ def inactive_user(db_session):
 
 @pytest.fixture
 def access_token(active_user):
-    token, _ = create_access_token(active_user.id,active_user.language)
+    token, _ = create_access_token(active_user.id)
     return token
 
 
 @pytest.fixture
 def refresh_token(active_user):
-    token, _ = create_refresh_token(active_user.id,active_user.language)
+    token, _ = create_refresh_token(active_user.id)
     return token
 
 
@@ -316,7 +316,7 @@ def admin_user(db_session, admin_role):
 
 @pytest.fixture
 def admin_access_token(admin_user):
-    token, _ = create_access_token(admin_user.id,active_user.language,)
+    token, _ = create_access_token(admin_user.id)
     return token
 
 @pytest.fixture
