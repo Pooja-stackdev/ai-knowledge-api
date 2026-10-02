@@ -254,23 +254,23 @@ def upload_access_token(upload_user):
     return token
 
 @pytest.fixture
-def admin_role(
+def super_admin_role(
     db_session,
-    admin_permissions,
+    super_admin_permissions,
 ):
     role = db_session.scalar(
-        select(Role).where(Role.name == "admin")
+        select(Role).where(Role.name == "super_admin")
     )
 
     if role is None:
         role = Role(
-            name="admin",
-            description="System administrator",
+            name="super_admin",
+            description="System super administrator",
         )
         db_session.add(role)
         db_session.flush()
 
-    for permission in admin_permissions:
+    for permission in super_admin_permissions:
         exists = db_session.scalar(
             select(RolePermission).where(
                 RolePermission.role_id == role.id,
@@ -292,9 +292,9 @@ def admin_role(
     return role
 
 @pytest.fixture
-def admin_user(db_session, admin_role):
+def super_admin_user(db_session, super_admin_role):
     user = User(
-        email=f"admin-{uuid4().hex}@example.com",
+        email=f"super-admin-{uuid4().hex}@example.com",
         password_hash=hash_password("Admin@123456"),
         is_active=True,
     )
@@ -305,7 +305,7 @@ def admin_user(db_session, admin_role):
     db_session.add(
         UserRole(
             user_id=user.id,
-            role_id=admin_role.id,
+            role_id=super_admin_role.id,
         )
     )
 
@@ -315,12 +315,12 @@ def admin_user(db_session, admin_role):
     return user
 
 @pytest.fixture
-def admin_access_token(admin_user):
-    token, _ = create_access_token(admin_user.id)
+def super_admin_access_token(super_admin_user):
+    token, _ = create_access_token(super_admin_user.id)
     return token
 
 @pytest.fixture
-def admin_permissions(db_session):
+def super_admin_permissions(db_session):
     permission_names = [
         "user.read",
         "user.create",

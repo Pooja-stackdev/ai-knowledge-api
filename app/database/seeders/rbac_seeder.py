@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.rbac import SUPER_ADMIN_ROLE_NAME
 from app.core.security import hash_password
 from app.database.models.permission import Permission
 from app.database.models.role import Role
@@ -66,7 +67,7 @@ PERMISSIONS = [
 
 ROLES = [
     {
-        "name": "admin",
+        "name": SUPER_ADMIN_ROLE_NAME,
         "description": "Full system access",
         "permissions": [
             "document.create",
@@ -81,6 +82,17 @@ ROLES = [
             "role.create",
             "role.update",
             "role.delete",
+            "document.access.manage",
+        ],
+    },
+    {
+        "name": "admin",
+        "description": "Document administration access",
+        "permissions": [
+            "document.create",
+            "document.read",
+            "document.delete",
+            "query.execute",
             "document.access.manage",
         ],
     },
@@ -100,7 +112,7 @@ USERS = [
     {
         "email": "admin@example.com",
         "password": "Admin@123456",
-        "role": "admin",
+        "role": SUPER_ADMIN_ROLE_NAME,
     },
     {
         "email": "user@example.com",
@@ -111,6 +123,7 @@ USERS = [
 
 
 def seed_permissions(session: Session) -> dict[str, Permission]:
+    """Create the static permission catalog and return it by name."""
     permission_map: dict[str, Permission] = {}
 
     for data in PERMISSIONS:
@@ -126,7 +139,6 @@ def seed_permissions(session: Session) -> dict[str, Permission]:
                 description=data["description"],
             )
 
-            print(permission)
             session.add(permission)
             session.flush()
 
@@ -139,6 +151,7 @@ def seed_roles(
     session: Session,
     permission_map: dict[str, Permission],
 ) -> dict[str, Role]:
+    """Reconcile built-in roles with their intended permission sets."""
     role_map: dict[str, Role] = {}
 
     for data in ROLES:
@@ -157,23 +170,10 @@ def seed_roles(
             session.add(role)
             session.flush()
 
-        for permission_name in data["permissions"]:
-            permission = permission_map[permission_name]
-
-            exists = session.scalar(
-                select(RolePermission).where(
-                    RolePermission.role_id == role.id,
-                    RolePermission.permission_id == permission.id,
-                )
-            )
-
-            if exists is None:
-                session.add(
-                    RolePermission(
-                        role_id=role.id,
-                        permission_id=permission.id,
-                    )
-                )
+        role.permissions = [
+            permission_map[permission_name]
+            for permission_name in data["permissions"]
+        ]
 
         role_map[role.name] = role
 
@@ -186,6 +186,7 @@ def seed_users(
     session: Session,
     role_map: dict[str, Role],
 ) -> None:
+    """Create the bootstrap users without duplicating role assignments."""
     for data in USERS:
         user = session.scalar(
             select(User).where(

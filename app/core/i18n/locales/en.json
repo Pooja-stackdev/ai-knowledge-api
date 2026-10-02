@@ -27,7 +27,8 @@
     "not_found": "User not found.",
     "created": "User created successfully.",
     "updated": "User updated successfully.",
-    "deleted": "User deleted successfully."
+    "deleted": "User deleted successfully.",
+    "super_admin_assignment_forbidden": "The super-admin role cannot be assigned manually."
   },
   "validation": {
     "required": "This field is required.",
@@ -36,7 +37,8 @@
     "request_failed": "Request validation failed."
   },
   "role": {
-    "not_found": "One or more roles were not found."
+    "not_found": "One or more roles were not found.",
+    "super_admin_protected": "The super-admin role is protected and cannot be changed."
   },
   "query": {
     "empty": "Query cannot be empty."

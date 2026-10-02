@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from app.core.rbac import PROTECTED_ROLE_NAMES
 from app.core.security import (
     hash_password,
 )
@@ -14,6 +15,7 @@ from app.exceptions.common import (
 
 
 class UserService:
+    """Manage users while preventing assignment of protected system roles."""
 
     def __init__(self, db: Session,user_repository:UserRepository,role_repository:RoleRepository):
         self.db = db
@@ -38,9 +40,9 @@ class UserService:
             raise ConflictException("One or more roles do not exist")
 
         for role in roles:
-            if role.name == "admin":
+            if role.name in PROTECTED_ROLE_NAMES:
                 raise ConflictException(
-                    "The admin role cannot be assigned manually"
+                    "user.super_admin_assignment_forbidden"
                 )
 
         user = self.user_repository.create(
@@ -77,7 +79,6 @@ class UserService:
         role_ids: list[int] | None,
     ) -> User:
         user = self.user_repository.get_by_id(user_id)
-        print("usererrrrrrrrr")
         if not user:
             raise ResourceNotFoundException(
                 resource="User",
@@ -86,16 +87,13 @@ class UserService:
 
         if email is not None:
             existing_user = self.user_repository.get_by_email(email)
-            print("11111111111111111")
             if existing_user and existing_user.id != user.id:
-                print("333333333333333")
                 raise ConflictException(
                     "User with this email already exists"
                 )
 
             user.email = email
 
-        print("2222222222222222222")
         if password is not None:
             user.password_hash = hash_password(password)
 
@@ -103,19 +101,16 @@ class UserService:
             roles = self.role_repository.get_by_ids(role_ids)
 
             if len(roles) != len(set(role_ids)):
-                print("44444444444444")
                 raise ResourceNotFoundException(
                     resource="Roles",
                     resource_id=role_ids
                 )
 
             for role in roles:
-                if role.name == "admin":
-                    print("55555555555")
+                if role.name in PROTECTED_ROLE_NAMES:
                     raise BadRequestException(
-                        "The admin role cannot be assigned manually"
+                        "user.super_admin_assignment_forbidden"
                     )
-            print(roles)
             user.roles = roles
 
         self.db.commit()

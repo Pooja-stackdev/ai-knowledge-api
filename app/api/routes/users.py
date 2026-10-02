@@ -1,9 +1,11 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, status
 
 from app.api.dependencies.authentication import CurrentUser
 from app.api.dependencies.authorization import require_permission
 from app.api.dependencies.user import UserServiceDependency
-from app.exceptions.auth import AuthenticationException
+from app.database.models.user import User
 from app.schemas.auth import (
     CreateUserRequest,
     UpdateUserRequest,
@@ -23,22 +25,14 @@ router = APIRouter(
 )
 def create_user(
     request: CreateUserRequest,
-    current_user: CurrentUser,
+    current_user: Annotated[User, Depends(require_permission("user.create"))],
     service: UserServiceDependency,
 ):
-    if not current_user.has_permission("user.create"):
-        raise AuthenticationException(
-            "You do not have permission to create users",
-        )
-
-    try:
-        return service.create_user(
-            email=request.email,
-            password=request.password,
-            role_ids=request.role_ids,
-        )
-    except ValueError as exc:
-        raise AuthenticationException(str(exc)) from exc
+    return service.create_user(
+        email=request.email,
+        password=request.password,
+        role_ids=request.role_ids,
+    )
 
 
 @router.get(

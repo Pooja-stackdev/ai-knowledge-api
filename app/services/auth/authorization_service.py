@@ -4,6 +4,7 @@ from app.database.models.user import User
 
 
 class AuthorizationService:
+    """Evaluate permissions derived from a user's assigned roles."""
 
     def __init__(self, session: Session):
         self.session = session
@@ -13,41 +14,13 @@ class AuthorizationService:
         user: User,
         permission: str,
     ) -> bool:
-        print("Requested permission:", permission)
-        print("User:", user.email)
-
-        print("Roles:")
-        for role in user.roles:
-            print(
-                "  Role:",
-                role.id,
-                role.name,
-            )
-
-            print("  Permissions:")
-            for item in role.permissions:
-                print(
-                    "    Permission:",
-                    item.id,
-                    item.name,
-                    "|",
-                    item.description,
-                )
-
         user_permissions = {
             item.name
             for role in user.roles
             for item in role.permissions
         }
 
-        print("User permissions:", user_permissions)
-        print("Checking:", permission)
-
-        result = permission in user_permissions
-
-        print("Permission result:", result)
-
-        return result
+        return permission in user_permissions
 
     def has_role(
         self,

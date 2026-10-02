@@ -2,6 +2,7 @@
 
 from sqlalchemy.orm import Session
 
+from app.core.rbac import PROTECTED_ROLE_NAMES, SUPER_ADMIN_ROLE_NAME
 from app.database.models.role_permission import RolePermission
 from app.database.repositories.permission_repository import (
     PermissionRepository,
@@ -20,6 +21,7 @@ from app.exceptions.common import (
 
 
 class RoleService:
+    """Manage dynamic roles while preserving protected system roles."""
 
     def __init__(self, db: Session):
         self.db = db
@@ -33,6 +35,10 @@ class RoleService:
         description: str | None,
         permission_ids: list[int],
     ):
+        """Create a non-system role with the requested permissions."""
+
+        if name == SUPER_ADMIN_ROLE_NAME:
+            raise ValidationException("role.super_admin_protected")
 
         existing_role = self.role_repository.get_by_name(name)
 
@@ -119,6 +125,7 @@ class RoleService:
         description: str | None,
         permission_ids: list[int],
     ):
+        """Update a dynamic role; the super-admin role is immutable."""
         role = self.role_repository.get_by_id(role_id)
 
         if role is None:
@@ -134,18 +141,8 @@ class RoleService:
 
         permission_ids = list(set(permission_ids))
 
-        if role.name == "admin":
-            admin_permission_ids = {
-                permission.id
-                for permission in self.permission_repository.get_all()
-            }
-
-            if not admin_permission_ids.issubset(
-                set(permission_ids)
-            ):
-                raise ValidationException(
-                    "Admin role must retain all permissions"
-                )
+        if role.name in PROTECTED_ROLE_NAMES:
+            raise ValidationException("role.super_admin_protected")
 
         permissions = self.permission_repository.get_by_ids(
             permission_ids
@@ -178,6 +175,7 @@ class RoleService:
         }
 
     def delete_role(self, role_id: int) -> None:
+        """Delete a dynamic role while preventing system-role deletion."""
         role = self.role_repository.get_by_id(role_id)
 
         if role is None:
@@ -186,10 +184,8 @@ class RoleService:
                 resource_id=role_id,
             )
 
-        if role.name == "admin":
-            raise ValidationException(
-                "The admin role cannot be deleted"
-            )
+        if role.name in PROTECTED_ROLE_NAMES:
+            raise ValidationException("role.super_admin_protected")
 
         self.role_repository.delete(role)
 
