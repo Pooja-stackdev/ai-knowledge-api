@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field
 
 
 class LoginRequest(BaseModel):
@@ -16,19 +16,18 @@ class RefreshTokenRequest(BaseModel):
     refresh_token: str
 
 
-class UserResponse(BaseModel):
-    id: int
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8, max_length=128)
+    confirm_new_password: str
+
+class ForgotPasswordRequest(BaseModel):
     email: EmailStr
-    is_active: bool
 
-    model_config = ConfigDict(from_attributes=True)
-
-class CreateUserRequest(BaseModel):
-    email: EmailStr
-    password: str = Field(min_length=8)
-    role_ids: list[int] = []
-
-class UpdateUserRequest(BaseModel):
-    email: EmailStr | None = None
-    password: str | None = Field(default=None, min_length=8)
-    role_ids: list[int] | None = None
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str = Field(
+        min_length=8,
+        max_length=128,
+    )
+    confirm_new_password: str

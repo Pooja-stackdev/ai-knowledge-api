@@ -9,8 +9,8 @@ from app.database.models.timestamp_mixin import TimestampMixin
 from app.domain.enums.document import DocumentStatus
 
 if TYPE_CHECKING:
+    from app.database.models.document_role import DocumentRole
     from app.database.models.notification_outbox import NotificationOutbox
-    from app.database.models.role import Role
 
 class Document(Base,TimestampMixin):
     __tablename__ = "documents"
@@ -61,9 +61,10 @@ class Document(Base,TimestampMixin):
         nullable=True,
     )
 
-    roles: Mapped[list["Role"]] = relationship(
-        secondary="document_roles",
-        back_populates="documents",
+    document_roles: Mapped[list["DocumentRole"]] = relationship(
+        "DocumentRole",
+        back_populates="document",
+        cascade="all, delete-orphan",
     )
 
     notifications: Mapped[list["NotificationOutbox"]] = relationship(

@@ -81,6 +81,7 @@ class Settings(BaseSettings):
     notification_max_attempts: int = Field(default=5, gt=0)
     notification_retry_base_seconds: int = Field(default=60, gt=0)
     notification_sending_timeout_minutes: int = Field(default=15, gt=0)
+    frontend_password_reset_url: str
 
 
 settings = Settings()

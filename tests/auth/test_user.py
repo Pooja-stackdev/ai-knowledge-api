@@ -7,7 +7,8 @@ from app.database.models.user import User
 from app.database.models.user_role import UserRole
 
 
-def test_get_user(client, active_user, super_admin_access_token):
+def test_get_user(active_user, super_admin_access_token,client):
+    print(f"active_user:{active_user.id}")
     response = client.get(
         f"/users/{active_user.id}",
         headers={

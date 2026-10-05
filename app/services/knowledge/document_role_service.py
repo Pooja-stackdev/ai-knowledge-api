@@ -8,14 +8,18 @@ from app.database.repositories.document import (
 from app.database.repositories.document_role import (
     DocumentRoleRepository,
 )
+from app.database.repositories.role_repository import (
+    RoleRepository,
+)
 from app.exceptions.common import ResourceNotFoundException
 
 
 class DocumentRoleService:
 
     def __init__(self, db: Session):
+        self.db = db
         self.document_repository = DocumentRepository(db)
-        self.role_repository = DocumentRoleRepository(db)
+        self.role_repository = RoleRepository(db)
         self.document_role_repository = DocumentRoleRepository(db)
 
     def replace_roles(
@@ -44,5 +48,8 @@ class DocumentRoleService:
             document_id=document_id,
             role_ids=role_ids,
         )
+
+        self.db.commit()
+        self.db.refresh(document)
 
         return role_ids

@@ -111,9 +111,13 @@ class FaissVectorStore:
             )
 
         # IndexFlatIP does not support metadata filtering.
-        # Search all vectors, then apply the authorization filter.
-        search_k = self.index.ntotal if allowed_ids is not None else top_k
-
+        # Search all vectors when authorization filtering is required.
+        search_k = (
+            self.index.ntotal
+            if allowed_ids is not None
+            else top_k
+        )
+        print(f"search_k:{search_k}")
         scores, ids = self.index.search(
             vector,
             search_k,
@@ -126,6 +130,18 @@ class FaissVectorStore:
             scores[0],
         ):
             if chunk_id == -1:
+                continue
+
+            chunk_id = int(chunk_id)
+
+            print(
+                f"FAISS RESULT: chunk_id={chunk_id}, "
+                f"allowed={chunk_id in allowed_ids if allowed_ids is not None else 'NO FILTER'}"
+            )
+            
+            # Authorization filter
+            if allowed_ids is not None and chunk_id not in allowed_ids:
+                print(f"SKIPPING UNAUTHORIZED CHUNK: {chunk_id}")
                 continue
 
             results.append(

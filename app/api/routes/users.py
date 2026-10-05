@@ -6,7 +6,7 @@ from app.api.dependencies.authentication import CurrentUser
 from app.api.dependencies.authorization import require_permission
 from app.api.dependencies.user import UserServiceDependency
 from app.database.models.user import User
-from app.schemas.auth import (
+from app.schemas.user import (
     CreateUserRequest,
     UpdateUserRequest,
     UserResponse,
@@ -47,11 +47,7 @@ def get_user(
     current_user: CurrentUser,
     service: UserServiceDependency,
 ):
-    try:
-        return service.get_user(user_id)
-    except ValueError as exc:
-        raise AuthenticationException(str(exc)) from exc
-
+    return service.get_user(user_id)
 
 @router.put(
     "/{user_id}",
@@ -66,15 +62,11 @@ def update_user(
     current_user: CurrentUser,
     service: UserServiceDependency,
 ):
-    try:
-        return service.update_user(
-            user_id=user_id,
-            email=request.email,
-            password=request.password,
-            role_ids=request.role_ids,
-        )
-    except ValueError as exc:
-        raise AuthenticationException(str(exc)) from exc
+    return service.update_user(
+        user_id=user_id,
+        email=request.email,
+        role_ids=request.role_ids,
+    )
 
 
 @router.delete(
@@ -89,7 +81,6 @@ def delete_user(
     current_user: CurrentUser,
     service: UserServiceDependency,
 ):
-    try:
-        service.delete_user(user_id)
-    except ValueError as exc:
-        raise AuthenticationException(str(exc)) from exc
+    service.delete_user(user_id)
+
+

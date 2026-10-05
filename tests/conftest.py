@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
+from app.api.dependencies.authentication import get_email_provider
 from app.application.document_worker_service import DocumentWorkerService
 from app.core.config import settings
 from app.core.security import create_access_token, create_refresh_token, hash_password
@@ -52,6 +53,7 @@ def setup_test_database():
     Base.metadata.drop_all(bind=test_engine)
 
 
+
 @pytest.fixture
 def db_session():
     db = TestSessionLocal()
@@ -73,7 +75,8 @@ def client(db_session):
     with TestClient(app) as test_client:
         yield test_client
 
-    app.dependency_overrides.clear()
+    app.dependency_overrides.pop(get_db_session, None)
+    # app.dependency_overrides.clear()
 
 
 @pytest.fixture
@@ -309,6 +312,8 @@ def super_admin_user(db_session, super_admin_role):
             role_id=super_admin_role.id,
         )
     )
+    print(f"USER IDDDDD------{user.id}")
+    print(settings.test_database_url)
 
     db_session.commit()
     db_session.refresh(user)
@@ -317,6 +322,7 @@ def super_admin_user(db_session, super_admin_role):
 
 @pytest.fixture
 def super_admin_access_token(super_admin_user):
+    print(super_admin_user.id)
     token, _ = create_access_token(super_admin_user.id)
     return token
 
@@ -349,3 +355,26 @@ def super_admin_permissions(db_session):
         permissions.append(permission)
 
     return permissions
+
+class FakeEmailProvider:
+    def __init__(self):
+        self.messages = []
+
+    def send(self, message):
+        self.messages.append(message)
+
+
+@pytest.fixture
+def fake_email_provider():
+    provider = FakeEmailProvider()
+
+    app.dependency_overrides[get_email_provider] = (
+        lambda: provider
+    )
+
+    yield provider
+
+    app.dependency_overrides.pop(get_email_provider, None)
+
+
+    

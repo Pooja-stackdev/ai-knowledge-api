@@ -5,7 +5,6 @@ from app.core.rbac import SUPER_ADMIN_ROLE_NAME
 from app.core.security import hash_password
 from app.database.models.permission import Permission
 from app.database.models.role import Role
-from app.database.models.role_permission import RolePermission
 from app.database.models.user import User
 from app.database.models.user_role import UserRole
 
@@ -86,7 +85,7 @@ ROLES = [
         ],
     },
     {
-        "name": "admin",
+        "name": "Admin",
         "description": "Document administration access",
         "permissions": [
             "document.create",
@@ -97,7 +96,7 @@ ROLES = [
         ],
     },
     {
-        "name": "user",
+        "name": "Users",
         "description": "Standard knowledge base user",
         "permissions": [
             "document.create",
@@ -113,12 +112,7 @@ USERS = [
         "email": "admin@example.com",
         "password": "Admin@123456",
         "role": SUPER_ADMIN_ROLE_NAME,
-    },
-    {
-        "email": "user@example.com",
-        "password": "User@123456",
-        "role": "user",
-    },
+    }
 ]
 
 

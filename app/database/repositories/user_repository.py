@@ -50,3 +50,15 @@ class UserRepository:
     def delete(self, user: User) -> None:
         self.db.delete(user)
         self.db.flush()
+
+    def update_password(
+        self,
+        user: User,
+        password_hash: str,
+    ) -> User:
+        user.password_hash = password_hash
+
+        self.db.commit()
+        self.db.refresh(user)
+
+        return user

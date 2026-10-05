@@ -193,7 +193,7 @@ def test_query_rejects_empty_query():
         llm_provider=llm_provider,
     )
 
-    with pytest.raises(ValueError, match="Query cannot be empty"):
+    with pytest.raises(ValueError, match="query.empty"):
         service.query(
             query="   ",
             role_ids=[1],

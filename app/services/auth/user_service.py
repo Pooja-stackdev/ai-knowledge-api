@@ -75,7 +75,6 @@ class UserService:
         *,
         user_id: int,
         email: str | None,
-        password: str | None,
         role_ids: list[int] | None,
     ) -> User:
         user = self.user_repository.get_by_id(user_id)
@@ -93,9 +92,6 @@ class UserService:
                 )
 
             user.email = email
-
-        if password is not None:
-            user.password_hash = hash_password(password)
 
         if role_ids is not None:
             roles = self.role_repository.get_by_ids(role_ids)
@@ -128,3 +124,6 @@ class UserService:
             )
 
         self.user_repository.delete(user)
+
+
+   

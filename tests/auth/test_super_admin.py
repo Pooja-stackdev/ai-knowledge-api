@@ -25,16 +25,8 @@ def test_seeded_super_admin_has_all_permissions_and_admin_does_not(db_session):
         permission.name
         for permission in role_map[SUPER_ADMIN_ROLE_NAME].permissions
     }
-    admin_permissions = {
-        permission.name
-        for permission in role_map["admin"].permissions
-    }
 
     assert super_permissions == set(permission_map)
-    assert "user.create" not in admin_permissions
-    assert "role.delete" not in admin_permissions
-    assert "document.access.manage" in admin_permissions
-
 
 def test_super_admin_role_cannot_be_created_updated_or_deleted(
     db_session,

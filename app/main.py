@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.routes.auth import router as auth_router
 from app.api.routes.documents import router as document_router
+from app.api.routes.permissions import router as permission_route
 from app.api.routes.query import router as query_router
 from app.api.routes.roles import router as role_router
 from app.api.routes.users import router as user_router
@@ -17,10 +18,10 @@ from app.core.exception_handlers import (
     generic_exception_handler,
     validation_exception_handler,
 )
-from app.core.logging import setup_logging
 from app.core.i18n.middleware import localization_middleware
-from app.exceptions import AppException
+from app.core.logging import setup_logging
 from app.database.connection import SessionLocal
+from app.exceptions import AppException
 
 setup_logging()
 
@@ -54,6 +55,7 @@ app.include_router(document_router)
 app.include_router(query_router)
 app.include_router(role_router)
 app.include_router(user_router)
+app.include_router(permission_route)
 
 
 app.add_exception_handler(

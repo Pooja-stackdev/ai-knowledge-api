@@ -9,10 +9,16 @@ from app.api.dependencies.authentication import (
     CurrentUser,
     oauth2_scheme,
 )
+from app.core.i18n import get_message
 from app.exceptions.auth import AuthenticationException
 from app.schemas.auth import (
+    ChangePasswordRequest,
+    ForgotPasswordRequest,
     RefreshTokenRequest,
+    ResetPasswordRequest,
     TokenResponse,
+)
+from app.schemas.user import (
     UserResponse,
 )
 
@@ -93,3 +99,49 @@ def get_me(
 ):
     return current_user
 
+@router.post(
+    "/me/change-password",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def change_password(
+    request: ChangePasswordRequest,
+    current_user: CurrentUser,
+    service: AuthServiceDependency,
+):
+    service.change_password(
+        user_id=current_user.id,
+        current_password=request.current_password,
+        new_password=request.new_password,
+        confirm_new_password=request.confirm_new_password,
+    )
+
+
+@router.post("/forgot-password")
+def forgot_password(
+    request: ForgotPasswordRequest,
+    service: AuthServiceDependency,
+):
+    service.forgot_password(request.email)
+
+    return {
+        "message": get_message(
+            "auth.password_reset_email_sent"
+        )
+    }
+
+@router.post("/reset-password")
+def reset_password(
+    request: ResetPasswordRequest,
+    service: AuthServiceDependency,
+):
+    service.reset_password(
+        token=request.token,
+        new_password=request.new_password,
+        confirm_new_password=request.confirm_new_password,
+    )
+
+    return {
+        "message": get_message(
+            "auth.password_reset_success"
+        )
+    }

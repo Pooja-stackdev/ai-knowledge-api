@@ -7,7 +7,7 @@ from app.database.models.base import Base
 from app.database.models.timestamp_mixin import TimestampMixin
 
 if TYPE_CHECKING:
-    from app.database.models.document import Document
+    from app.database.models.document_role import DocumentRole
     from app.database.models.permission import Permission
     from app.database.models.user import User
 
@@ -45,7 +45,8 @@ class Role(TimestampMixin, Base):
         
     )
 
-    documents: Mapped[list["Document"]] = relationship(
-        secondary="document_roles",
-        back_populates="roles",
+    document_roles: Mapped[list["DocumentRole"]] = relationship(
+        "DocumentRole",
+        back_populates="role",
+        cascade="all, delete-orphan",
     )

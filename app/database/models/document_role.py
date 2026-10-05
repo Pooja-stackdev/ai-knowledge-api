@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.models.base import Base
 
@@ -29,4 +29,15 @@ class DocumentRole(Base):
             ondelete="CASCADE",
         ),
         primary_key=True,
+    )
+
+
+    document = relationship(
+        "Document",
+        back_populates="document_roles",
+    )
+
+    role = relationship(
+        "Role",
+        back_populates="document_roles",
     )

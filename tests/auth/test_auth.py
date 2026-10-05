@@ -1,4 +1,10 @@
 
+from datetime import datetime, timedelta, timezone
+
+from sqlalchemy import select
+
+from app.database.models.password_reset_token import PasswordResetToken
+
 
 def test_login_success(client, active_user):
     response = client.post(
@@ -9,8 +15,6 @@ def test_login_success(client, active_user):
         },
     )
 
-    print("STATUS:", response.status_code)
-    print("RESPONSE:", response.json())
     assert response.status_code == 200
 
     data = response.json()
@@ -218,3 +222,226 @@ def test_logout_with_invalid_access_token(
     )
 
     assert response.status_code == 401
+
+
+
+
+def test_forgot_password_existing_user(
+    client,
+    active_user,
+    db_session,
+):
+    response = client.post(
+        "/auth/forgot-password",
+        json={
+            "email": active_user.email,
+        },
+    )
+
+    assert response.status_code == 200
+
+    reset_token = (
+        db_session.query(PasswordResetToken)
+        .filter_by(user_id=active_user.id)
+        .first()
+    )
+
+    assert reset_token is not None
+    assert reset_token.used_at is None
+    assert reset_token.expires_at is not None
+
+    def test_forgot_password_invalid_email(
+        client,
+    ):
+        response = client.post(
+            "/auth/forgot-password",
+            json={
+                "email": "invalid-email",
+            },
+        )
+
+        assert response.status_code == 422
+
+    def test_reset_password_success(
+        client,
+        active_user,
+        db_session,
+        fake_email_provider,
+    ):
+        # Step 1: request password reset
+        response = client.post(
+            "/auth/forgot-password",
+            json={
+                "email": active_user.email,
+            },
+        )
+
+        assert response.status_code == 200
+
+        # Step 2: extract token from email
+        message = fake_email_provider.messages[0]
+
+        body = message.get_body(
+            preferencelist=("plain",)
+        ).get_content()
+
+        import re
+
+        match = re.search(
+            r"[?&]token=([^\s]+)",
+            body,
+        )
+
+        assert match is not None
+
+        reset_token = match.group(1)
+
+        # Step 3: reset password
+        response = client.post(
+            "/auth/reset-password",
+            json={
+                "token": reset_token,
+                "new_password": "NewTest@123456",
+                "confirm_new_password": "NewTest@123456",
+            },
+        )
+
+        assert response.status_code == 200
+
+        # Step 4: verify password was changed
+        db_session.refresh(active_user)
+
+        from app.core.security import verify_password
+
+        assert verify_password(
+            "NewTest@123456",
+            active_user.password_hash,
+        )
+
+        # Step 5: verify token is consumed
+        reset_token_record = db_session.scalar(
+            select(PasswordResetToken).where(
+                PasswordResetToken.user_id == active_user.id
+            )
+        )
+
+        assert reset_token_record.used_at is not None
+
+def test_reset_password_confirmation_mismatch(
+    client,
+    active_user,
+    fake_email_provider,
+):
+    # Create reset token
+    response = client.post(
+        "/auth/forgot-password",
+        json={
+            "email": active_user.email,
+        },
+    )
+
+    assert response.status_code == 200
+
+    message = fake_email_provider.messages[0]
+
+    body = message.get_body(
+        preferencelist=("plain",)
+    ).get_content()
+
+    import re
+
+    match = re.search(
+        r"[?&]token=([^\s]+)",
+        body,
+    )
+
+    assert match is not None
+
+    reset_token = match.group(1)
+
+    # Try reset with different confirmation password
+    response = client.post(
+        "/auth/reset-password",
+        json={
+            "token": reset_token,
+            "new_password": "NewTest@123456",
+            "confirm_new_password": "Different@123456",
+        },
+    )
+
+    assert response.status_code == 400
+
+    def test_reset_password_invalid_token(
+        client,
+    ):
+        response = client.post(
+            "/auth/reset-password",
+            json={
+                "token": "invalid-reset-token",
+                "new_password": "NewTest@123456",
+                "confirm_new_password": "NewTest@123456",
+            },
+        )
+
+        assert response.status_code == 400
+
+
+    def test_reset_password_expired_token(
+        client,
+        active_user,
+        db_session,
+        fake_email_provider,
+    ):
+        # Create reset token
+        response = client.post(
+            "/auth/forgot-password",
+            json={
+                "email": active_user.email,
+            },
+        )
+
+        assert response.status_code == 200
+
+        message = fake_email_provider.messages[0]
+
+        body = message.get_body(
+            preferencelist=("plain",)
+        ).get_content()
+
+        import re
+
+        match = re.search(
+            r"[?&]token=([^\s]+)",
+            body,
+        )
+
+        assert match is not None
+
+        reset_token = match.group(1)
+
+        # Expire the token
+        token_record = db_session.scalar(
+            select(PasswordResetToken).where(
+                PasswordResetToken.user_id == active_user.id
+            )
+        )
+
+        assert token_record is not None
+
+        token_record.expires_at = datetime.now(timezone.utc) - timedelta(
+            minutes=1
+        )
+
+        db_session.commit()
+
+        # Try to reset password
+        response = client.post(
+            "/auth/reset-password",
+            json={
+                "token": reset_token,
+                "new_password": "NewTest@123456",
+                "confirm_new_password": "NewTest@123456",
+            },
+        )
+
+        assert response.status_code == 400

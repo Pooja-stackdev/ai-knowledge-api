@@ -16,11 +16,11 @@ from app.domain.enums.document import DocumentStatus
 from app.domain.validators.document_lifecycle import validate_transition
 from app.domain.validators.document_validator import DocumentValidator
 from app.exceptions.auth import AuthorizationException
-from app.exceptions.common import (
-    ResourceNotFoundException,
-)
 from app.exceptions.base import (
     AppException,
+)
+from app.exceptions.common import (
+    ResourceNotFoundException,
 )
 from app.services.knowledge.vector_service import VectorService
 from app.storage.local_storage import LocalFileStorage
