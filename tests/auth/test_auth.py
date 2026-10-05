@@ -445,3 +445,63 @@ def test_reset_password_confirmation_mismatch(
         )
 
         assert response.status_code == 400
+
+
+def test_new_forgot_password_request_invalidates_previous_token(
+    client,
+    active_user,
+    db_session,
+    fake_email_provider,
+):
+    # First forgot-password request
+    response = client.post(
+        "/auth/forgot-password",
+        json={
+            "email": active_user.email,
+        },
+    )
+
+    assert response.status_code == 200
+
+    first_token_record = db_session.scalar(
+        select(PasswordResetToken).where(
+            PasswordResetToken.user_id == active_user.id
+        )
+    )
+
+    assert first_token_record is not None
+    assert first_token_record.used_at is None
+
+    first_token_hash = first_token_record.token_hash
+
+    # Second forgot-password request
+    response = client.post(
+        "/auth/forgot-password",
+        json={
+            "email": active_user.email,
+        },
+    )
+
+    assert response.status_code == 200
+
+    # Verify first token is invalidated
+    db_session.refresh(first_token_record)
+
+    assert first_token_record.token_hash == first_token_hash
+    assert first_token_record.used_at is not None
+
+    # Verify a new active token exists
+    tokens = db_session.scalars(
+        select(PasswordResetToken)
+        .where(
+            PasswordResetToken.user_id == active_user.id
+        )
+        .order_by(PasswordResetToken.id)
+    ).all()
+
+    assert len(tokens) == 2
+
+    second_token_record = tokens[-1]
+
+    assert second_token_record.id != first_token_record.id
+    assert second_token_record.used_at is None
