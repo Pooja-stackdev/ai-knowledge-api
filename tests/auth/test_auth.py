@@ -505,3 +505,58 @@ def test_new_forgot_password_request_invalidates_previous_token(
 
     assert second_token_record.id != first_token_record.id
     assert second_token_record.used_at is None
+
+def test_old_reset_token_fails_after_new_request(
+    client,
+    active_user,
+    db_session,
+    fake_email_provider,
+):
+    import re
+
+    # First reset request
+    response = client.post(
+        "/auth/forgot-password",
+        json={
+            "email": active_user.email,
+        },
+    )
+
+    assert response.status_code == 200
+
+    first_message = fake_email_provider.messages[0]
+
+    first_body = first_message.get_body(
+        preferencelist=("plain",)
+    ).get_content()
+
+    first_match = re.search(
+        r"[?&]token=([^\s]+)",
+        first_body,
+    )
+
+    assert first_match is not None
+
+    first_token = first_match.group(1)
+
+    # Second reset request
+    response = client.post(
+        "/auth/forgot-password",
+        json={
+            "email": active_user.email,
+        },
+    )
+
+    assert response.status_code == 200
+
+    # Try using the old token
+    response = client.post(
+        "/auth/reset-password",
+        json={
+            "token": first_token,
+            "new_password": "NewTest@123456",
+            "confirm_new_password": "NewTest@123456",
+        },
+    )
+
+    assert response.status_code == 400
