@@ -186,12 +186,6 @@ def test_stuck_document_exceeds_max_attempts(
         timeout_minutes=15
     )
 
-    print(f"document -> {document}")
-    print(f"id -> {document.id}")
-    print(f"status -> {document.status}")
-    print(f"attempt_count -> {document.attempt_count}")
-    print(f"error -> {document.last_error}")
-
     assert document.status == DocumentStatus.FAILED
     assert document.last_error == (
         "Maximum processing attempts exceeded"

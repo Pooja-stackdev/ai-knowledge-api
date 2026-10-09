@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class DocumentRoleRequest(BaseModel):
-    role_ids: list[int] = Field(min_length=1)
+    role_ids: list[int] = Field(default_factory=list)
 
 
 class DocumentRoleResponse(BaseModel):

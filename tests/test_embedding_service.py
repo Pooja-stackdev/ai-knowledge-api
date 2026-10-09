@@ -1,5 +1,6 @@
 import pytest
 
+from app.exceptions.common import BadRequestException
 from app.services.knowledge.embedding_service import EmbeddingService
 
 
@@ -43,8 +44,8 @@ def test_embed_query_raises_when_provider_returns_no_embedding():
     )
 
     with pytest.raises(
-        ValueError,
-        match="Failed to generate query embedding",
+        BadRequestException,
+        match="query.embedding_failed",
     ):
         service.embed_query(
             "What is the refund policy?"

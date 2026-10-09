@@ -9,6 +9,7 @@ venv/
 
 # Environment variables
 .env
+frontend/.env
 
 # IDE
 .vscode/

@@ -9,8 +9,8 @@ from app.schemas.permission import PermissionResponse
 from app.services.auth.permission_service import PermissionService
 
 router = APIRouter(
-    prefix="/roles",
-    tags=["Roles"],
+    prefix="/permissions",
+    tags=["Permissions"],
 )
 
 

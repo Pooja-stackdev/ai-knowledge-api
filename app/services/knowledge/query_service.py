@@ -1,3 +1,5 @@
+from app.core.i18n import get_message
+from app.exceptions.common import BadRequestException,ValidationException
 from app.rag.context_builder import ContextBuilder
 from app.rag.llm.base import LLMProvider
 from app.rag.prompt_builder import PromptBuilder
@@ -30,7 +32,7 @@ class QueryService:
         """Answer a query using retrieved knowledge and an LLM."""
 
         if not query.strip():
-            raise ValueError("query.empty")
+            raise ValidationException("query.empty")
     
         chunks = self.retrieval_service.retrieve(
             query=query,
@@ -43,10 +45,7 @@ class QueryService:
         if not context.text.strip():
             return QueryResult(
                 query=query,
-                answer=(
-                    "I couldn't find relevant information "
-                    "in the knowledge base."
-                ),
+                answer=get_message("query.no_relevant_info"),
                 sources=[],
             )
 

@@ -33,8 +33,6 @@ def test_login_with_invalid_password(client, active_user):
         },
     )
 
-    print("STATUS:", response.status_code)
-    print("RESPONSE:", response.json())
     assert response.status_code == 401
     assert response.json()["message"] == "Could not validate credentials."
 

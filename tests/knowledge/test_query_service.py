@@ -1,5 +1,7 @@
 import pytest
 
+from app.core.i18n import get_message
+from app.exceptions.common import ValidationException
 from app.rag.context_builder import ContextBuilder
 from app.rag.prompt_builder import PromptBuilder
 from app.rag.result import RetrievedChunk
@@ -20,20 +22,20 @@ class FakeRetrievalService:
     ):
         return self.chunks
 
-def test_query_rejects_whitespace_only(client,access_token):
+def test_query_rejects_whitespace_only(client,super_admin_access_token):
     response = client.post(
         "/query",
         json={"query": "   "},
-        headers={"Authorization": f"Bearer {access_token}"},
+        headers={"Authorization": f"Bearer {super_admin_access_token}"},
     )
-
+    
     assert response.status_code == 422
 
-def test_query_rejects_query_over_max_length(client,access_token):
+def test_query_rejects_query_over_max_length(client,super_admin_access_token):
     response = client.post(
         "/query",
         json={"query": "a" * 2001},
-        headers={"Authorization": f"Bearer {access_token}"},
+        headers={"Authorization": f"Bearer {super_admin_access_token}"},
     )
 
     assert response.status_code == 422
@@ -130,7 +132,7 @@ def test_query_does_not_call_llm_when_no_context():
     assert result.sources == []
 
     assert result.answer == (
-        "I couldn't find relevant information in the knowledge base."
+        get_message('query.no_relevant_info')
     )
 
     assert len(llm_provider.calls) == 0
@@ -193,7 +195,7 @@ def test_query_rejects_empty_query():
         llm_provider=llm_provider,
     )
 
-    with pytest.raises(ValueError, match="query.empty"):
+    with pytest.raises(ValidationException, match="query.empty"):
         service.query(
             query="   ",
             role_ids=[1],

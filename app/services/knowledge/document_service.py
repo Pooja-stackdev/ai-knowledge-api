@@ -4,6 +4,7 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.core.rbac import SUPER_ADMIN_ROLE_NAME
 from app.database.models.document import Document
 from app.database.models.document_chunk import DocumentChunk
 from app.database.repositories.document import (
@@ -11,6 +12,12 @@ from app.database.repositories.document import (
 )
 from app.database.repositories.document_chunk import (
     DocumentChunkRepository,
+)
+from app.database.repositories.document_role import (
+    DocumentRoleRepository,
+)
+from app.database.repositories.role_repository import (
+    RoleRepository,
 )
 from app.domain.enums.document import DocumentStatus
 from app.domain.validators.document_lifecycle import validate_transition
@@ -34,12 +41,16 @@ class DocumentService:
         self,
         db: Session,
         repository: DocumentRepository,
+        document_role_repository: DocumentRoleRepository,
+        role_repository: RoleRepository,
         storage: LocalFileStorage,
         chunk_repository: DocumentChunkRepository,
         vector_service: VectorService,
     ):
         self.db = db
         self.repository = repository
+        self.document_role_repository = document_role_repository
+        self.role_repository = role_repository
         self.storage = storage
         self.chunk_repository = chunk_repository
         self.vector_service = vector_service
@@ -91,6 +102,7 @@ class DocumentService:
         filename: str,
         content_type: str,
         description: str | None = None,
+        role_ids: list[int] | None = None,
     ) -> Document:
         DocumentValidator.validate(
             filename=filename,
@@ -120,16 +132,37 @@ class DocumentService:
                 storage_path=str(stored_path),
             )
 
+            super_admin_role = self.role_repository.get_by_name(
+                SUPER_ADMIN_ROLE_NAME
+            )
+
+            role_ids = set(role_ids or [])
+
+            if super_admin_role is not None:
+                role_ids.add(super_admin_role.id)
+            else:
+                role_ids.add(1)
+
+            self.document_role_repository.replace_roles(
+                document_id=document.id,
+                role_ids=role_ids,
+            )
+
+            # Commit ONLY after document + roles are successful
             self.db.commit()
+
             self.db.refresh(document)
 
             return document
 
         except AppException:
             self.db.rollback()
-
             stored_path.unlink(missing_ok=True)
+            raise
 
+        except Exception:
+            self.db.rollback()
+            stored_path.unlink(missing_ok=True)
             raise
 
     def claim_documents(

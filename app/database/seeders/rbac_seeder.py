@@ -42,6 +42,10 @@ PERMISSIONS = [
         "description": "Delete users",
     },
     {
+        "name": "permission.read",
+        "description": "View permission",
+    },
+    {
         "name": "role.read",
         "description": "View roles",
     },
@@ -77,6 +81,7 @@ ROLES = [
             "user.create",
             "user.update",
             "user.delete",
+            "permission.read",
             "role.read",
             "role.create",
             "role.update",

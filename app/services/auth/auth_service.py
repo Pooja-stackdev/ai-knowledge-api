@@ -11,6 +11,7 @@ from app.core.security import (
     hash_password,
     verify_password,
 )
+from app.database.models.user import User
 from app.database.repositories.auth_repository import AuthRepository
 from app.database.repositories.password_reset_token_repository import (
     PasswordResetTokenRepository,
@@ -21,7 +22,7 @@ from app.exceptions.common import (
     BadRequestException,
     ResourceNotFoundException,
 )
-from app.schemas.auth import TokenResponse
+from app.schemas.auth import AuthResponse, RoleSummary, TokenResponse
 from app.services.notifications.email_provider import EmailProvider
 from app.services.notifications.email_templates import (
     password_reset_message,
@@ -287,3 +288,32 @@ class AuthService:
         )
 
         self.db.commit()
+
+    def get_user_profile(self, user:User) -> AuthResponse:
+
+        # user = self.user_repository.get_current_user_by_id_with_permissions(
+        #     user_id=current_user_id
+        # )
+
+        # if user is None:
+        #     raise AuthenticationException("auth.credentials_invalid")
+    
+        permissions = {
+            permission.name
+            for role in user.roles
+            for permission in role.permissions
+        }
+
+        return AuthResponse(
+            id=user.id,
+            email=user.email,
+            is_active=user.is_active,
+            roles=[
+                RoleSummary(
+                    id=role.id,
+                    name=role.name,
+                )
+                for role in user.roles
+            ],
+            permissions=sorted(permissions),
+        )

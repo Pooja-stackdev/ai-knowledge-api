@@ -1,17 +1,525 @@
-2026-10-05 13:36:27,226 | INFO | app.services.knowledge.retrieval_service | ROLE IDS: [5]
-2026-10-05 13:36:27,227 | INFO | app.services.knowledge.retrieval_service | ACCESSIBLE DOCUMENT IDS: [62]
-2026-10-05 13:36:27,227 | INFO | app.services.knowledge.retrieval_service | ALLOWED CHUNK IDS: [43, 44]
-2026-10-05 13:36:27,242 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query="What is Aarav Shah's salary?" | top_k=5 | results=2
-2026-10-05 13:36:27,242 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 43, 'score': 0.09207204729318619}, {'chunk_id': 44, 'score': 0.017059270292520523}]
-2026-10-05 13:36:27,243 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.3 | before=2 | after=0
-2026-10-05 13:36:27,243 | INFO | app.services.knowledge.retrieval_service | No relevant chunks found for query
-2026-10-05 13:37:13,114 | INFO | app.services.knowledge.retrieval_service | ROLE IDS: [5]
-2026-10-05 13:37:13,116 | INFO | app.services.knowledge.retrieval_service | ACCESSIBLE DOCUMENT IDS: [62]
-2026-10-05 13:37:13,116 | INFO | app.services.knowledge.retrieval_service | ALLOWED CHUNK IDS: [43, 44]
-2026-10-05 13:37:13,169 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query="What is company's remote work policy?" | top_k=5 | results=2
-2026-10-05 13:37:13,169 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 43, 'score': 0.6266494989395142}, {'chunk_id': 44, 'score': 0.4797476530075073}]
-2026-10-05 13:37:13,170 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.3 | before=2 | after=2
-2026-10-05 13:37:13,180 | INFO | app.services.knowledge.retrieval_service | CHUNK ACCESS CHECK | chunk_id=43 | document_id=62
-2026-10-05 13:37:13,185 | INFO | app.services.knowledge.retrieval_service | CHUNK ACCESS CHECK | chunk_id=44 | document_id=62
-2026-10-05 13:37:13,186 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
-2026-10-05 13:37:13,187 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=2
+2026-10-09 17:04:03,552 | ERROR | app.core.exception_handlers | Unexpected application error | path=/users
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\core\i18n\middleware.py", line 20, in localization_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 727, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 324, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 2 validation errors:
+  {'type': 'missing', 'loc': ('response', 'role_ids'), 'msg': 'Field required', 'input': <app.database.models.user.User object at 0x000002677E587390>}
+  {'type': 'missing', 'loc': ('response', 'permissions'), 'msg': 'Field required', 'input': <app.database.models.user.User object at 0x000002677E587390>}
+
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\routes\users.py", line 22, in create_user
+    POST /users
+2026-10-09 17:30:36,102 | ERROR | app.core.exception_handlers | Unexpected application error | path=/users
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\core\i18n\middleware.py", line 20, in localization_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\routes\users.py", line 32, in create_user
+    return service.create_user(
+           ~~~~~~~~~~~~~~~~~~~^
+        email=request.email,
+        ^^^^^^^^^^^^^^^^^^^^
+        password=request.password,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        role_ids=request.role_ids,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\services\auth\user_service.py", line 65, in create_user
+    return UserResponse(
+        id=user.id,
+    ...<6 lines>...
+        ],
+    )
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\pydantic\main.py", line 263, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for UserResponse
+is_active
+  Field required [type=missing, input_value={'id': 6, 'email': 'emplo...read', 'query.execute']}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-10-09 17:44:17,937 | ERROR | app.core.exception_handlers | Unexpected application error | path=/users/6
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\core\i18n\middleware.py", line 20, in localization_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 727, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 324, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 2 validation errors:
+  {'type': 'missing', 'loc': ('response', 'role_ids'), 'msg': 'Field required', 'input': <app.database.models.user.User object at 0x0000025775B809B0>}
+  {'type': 'missing', 'loc': ('response', 'permissions'), 'msg': 'Field required', 'input': <app.database.models.user.User object at 0x0000025775B809B0>}
+
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\routes\users.py", line 53, in update_user
+    PUT /users/{user_id}
+2026-10-09 18:11:09,642 | INFO | app.services.knowledge.embedding_service | embeddings length:1
+2026-10-09 18:11:09,656 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is all employees salaries?' | top_k=5 | results=3
+2026-10-09 18:11:09,661 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 55, 'score': 0.5897340178489685}, {'chunk_id': 56, 'score': 0.2516087293624878}, {'chunk_id': 57, 'score': 0.23803290724754333}]
+2026-10-09 18:11:09,663 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.3 | before=3 | after=1
+2026-10-09 18:11:09,675 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
+2026-10-09 18:12:55,869 | WARNING | app.core.exception_handlers | Application error | path=/auth/login | message=auth.credentials_invalid
+2026-10-09 18:12:56,801 | WARNING | app.core.exception_handlers | Application error | path=/auth/login | message=auth.credentials_invalid
+2026-10-09 18:12:56,860 | WARNING | app.core.exception_handlers | Application error | path=/auth/login | message=auth.credentials_invalid
+2026-10-09 18:12:57,367 | WARNING | app.core.exception_handlers | Application error | path=/auth/login | message=auth.credentials_invalid
+2026-10-09 18:12:57,675 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.unauthorized
+2026-10-09 18:12:57,710 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.unauthorized
+2026-10-09 18:12:57,971 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.invalid_access_token
+2026-10-09 18:12:58,014 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.credentials_invalid
+2026-10-09 18:12:58,319 | WARNING | app.core.exception_handlers | Application error | path=/auth/refresh | message=auth.invalid_refresh_token
+2026-10-09 18:12:58,826 | WARNING | app.core.exception_handlers | Application error | path=/auth/logout | message=auth.invalid_token
+2026-10-09 18:12:59,233 | WARNING | app.core.exception_handlers | Application error | path=/auth/logout | message=auth.invalid_token
+2026-10-09 18:12:59,532 | ERROR | app.core.exception_handlers | Unexpected application error | path=/auth/forgot-password
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\core\i18n\middleware.py", line 20, in localization_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\routes\auth.py", line 123, in forgot_password
+    service.forgot_password(request.email)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\services\auth\auth_service.py", line 221, in forgot_password
+    self.email_provider.send(message)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\services\notifications\email_provider.py", line 24, in send
+    raise RuntimeError("SMTP delivery is disabled.")
+RuntimeError: SMTP delivery is disabled.
+2026-10-09 18:13:02,324 | WARNING | app.core.exception_handlers | Application error | path=/auth/reset-password | message=auth.new_password_confirmation_not_match
+2026-10-09 18:13:02,986 | WARNING | app.core.exception_handlers | Application error | path=/auth/reset-password | message=auth.invalid_expire_reset_token
+2026-10-09 18:13:04,314 | WARNING | app.core.exception_handlers | Application error | path=/users/15 | message=auth.forbidden
+2026-10-09 18:13:05,019 | WARNING | app.core.exception_handlers | Application error | path=/users/999999 | message=user.not_found
+2026-10-09 18:13:05,328 | ERROR | app.core.exception_handlers | Unexpected application error | path=/users/19
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\core\i18n\middleware.py", line 20, in localization_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 727, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 324, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 2 validation errors:
+  {'type': 'missing', 'loc': ('response', 'role_ids'), 'msg': 'Field required', 'input': <app.database.models.user.User object at 0x00000223F848A2B0>}
+  {'type': 'missing', 'loc': ('response', 'permissions'), 'msg': 'Field required', 'input': <app.database.models.user.User object at 0x00000223F848A2B0>}
+
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\routes\users.py", line 53, in update_user
+    PUT /users/{user_id}
+2026-10-09 18:13:07,320 | WARNING | app.core.exception_handlers | Application error | path=/users/20 | message=User with this email already exists
+2026-10-09 18:13:07,680 | ERROR | app.core.exception_handlers | Unexpected application error | path=/users/22
+Traceback (most recent call last):
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\core\i18n\middleware.py", line 20, in localization_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 727, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\.venv\Lib\site-packages\fastapi\routing.py", line 324, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 2 validation errors:
+  {'type': 'missing', 'loc': ('response', 'role_ids'), 'msg': 'Field required', 'input': <app.database.models.user.User object at 0x00000223F84884B0>}
+  {'type': 'missing', 'loc': ('response', 'permissions'), 'msg': 'Field required', 'input': <app.database.models.user.User object at 0x00000223F84884B0>}
+
+  File "D:\AI\Practice\production-demos\ai-knowledge-api\app\api\routes\users.py", line 53, in update_user
+    PUT /users/{user_id}
+2026-10-09 18:13:09,460 | WARNING | app.core.exception_handlers | Application error | path=/users/23 | message=user.super_admin_assignment_forbidden
+2026-10-09 18:13:09,764 | WARNING | app.core.exception_handlers | Application error | path=/users/24 | message=role.not_found
+2026-10-09 18:13:09,881 | WARNING | app.core.exception_handlers | Application error | path=/users/999999 | message=user.not_found
+2026-10-09 18:13:10,363 | WARNING | app.core.exception_handlers | Application error | path=/users/999999 | message=user.not_found
+2026-10-09 18:13:20,801 | WARNING | app.core.exception_handlers | Request validation failed | path=/query | errors=1
+2026-10-09 18:13:22,700 | WARNING | app.core.exception_handlers | Request validation failed | path=/query | errors=1
+2026-10-09 18:13:22,771 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=1
+2026-10-09 18:13:22,772 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.91}]
+2026-10-09 18:13:22,773 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=1
+2026-10-09 18:13:22,773 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
+2026-10-09 18:13:22,782 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=2
+2026-10-09 18:13:22,783 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.91}, {'chunk_id': 20, 'score': 0.72}]
+2026-10-09 18:13:22,783 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=1
+2026-10-09 18:13:22,785 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
+2026-10-09 18:13:22,794 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='Some question?' | top_k=5 | results=1
+2026-10-09 18:13:22,795 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.5}]
+2026-10-09 18:13:22,796 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=1 | after=0
+2026-10-09 18:13:22,797 | INFO | app.services.knowledge.retrieval_service | No relevant chunks found for query
+2026-10-09 18:13:22,809 | INFO | app.services.knowledge.retrieval_service | No accessible document chunks | documents=3
+2026-10-09 18:13:22,820 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='What is the refund policy?' | top_k=5 | results=2
+2026-10-09 18:13:22,820 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 10, 'score': 0.95}, {'chunk_id': 20, 'score': 0.9}]
+2026-10-09 18:13:22,821 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=2
+2026-10-09 18:13:22,821 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
+2026-10-09 18:13:22,821 | INFO | app.services.knowledge.retrieval_service | Skipping duplicate chunk | chunk_id=20
+2026-10-09 18:13:22,834 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='test' | top_k=5 | results=2
+2026-10-09 18:13:22,836 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 20, 'score': 0.95}, {'chunk_id': 10, 'score': 0.9}]
+2026-10-09 18:13:22,836 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.8 | before=2 | after=2
+2026-10-09 18:13:22,837 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
+2026-10-09 18:13:22,837 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=2
+2026-10-09 18:13:22,924 | INFO | app.services.knowledge.ingestion_service | extract_text: %s | {'document_filename': 'test.pdf'}
+2026-10-09 18:13:22,925 | INFO | app.services.knowledge.ingestion_service | Document text extracted | {'document_filename': 'test.pdf', 'page_count': 1}
+2026-10-09 18:13:23,746 | WARNING | app.core.exception_handlers | Application error | path=/documents/upload | message=File type '.exe' is not allowed
+2026-10-09 18:13:23,945 | INFO | app.services.knowledge.document_service | retry document id:8
+2026-10-09 18:13:23,953 | INFO | app.services.knowledge.document_service | retry document id:8, attempt_count:1
+2026-10-09 18:13:23,984 | INFO | app.services.knowledge.document_service | retry document id:9
+2026-10-09 18:13:24,020 | INFO | app.services.knowledge.document_service | get recover documents:[<app.database.models.document.Document object at 0x00000223F8458AA0>]
+2026-10-09 18:13:24,051 | INFO | app.services.knowledge.embedding_service | embeddings length:0
+2026-10-09 18:13:24,051 | INFO | app.services.knowledge.embedding_service | Failed to generate query embedding
+2026-10-09 18:13:24,339 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.unauthorized
+2026-10-09 18:13:24,375 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.unauthorized
+2026-10-09 18:13:24,407 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.unauthorized
+2026-10-09 18:13:24,416 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.unauthorized
+2026-10-09 18:13:24,459 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.unauthorized
+2026-10-09 18:13:24,462 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.unauthorized
+2026-10-09 18:13:24,512 | WARNING | app.core.exception_handlers | Request validation failed | path=/auth/refresh | errors=1
+2026-10-09 18:13:24,830 | WARNING | app.core.exception_handlers | Application error | path=/documents | message=auth.forbidden
+2026-10-09 18:13:24,863 | WARNING | app.core.exception_handlers | Application error | path=/auth/me | message=auth.unauthorized
+2026-10-09 18:13:24,877 | INFO | app.application.document_worker_service | Starting document processing | {'document_id': 1}
+2026-10-09 18:13:24,878 | INFO | app.application.document_worker_service | Existing chunks fetched | {'existing_chunks count': 0}
+2026-10-09 18:13:24,878 | INFO | app.application.document_worker_service | Existing chunk IDs: %s | {'existing_chunk_ids': []}
+2026-10-09 18:13:24,958 | INFO | app.services.notifications.notification_service | Document notifications queued | {'document_id': 11, 'recipients': 1}
+2026-10-09 18:13:24,977 | INFO | app.services.notifications.notification_service | Document notifications queued | {'document_id': 11, 'recipients': 0}
+2026-10-09 18:13:25,111 | INFO | app.services.notifications.notification_service | Document notifications queued | {'document_id': 12, 'recipients': 28}
+2026-10-09 18:13:25,248 | INFO | app.services.notifications.notification_service | Document notifications queued | {'document_id': 14, 'recipients': 29}
+2026-10-09 18:13:25,857 | INFO | app.services.notifications.notification_service | Document notifications queued | {'document_id': 15, 'recipients': 30}
+2026-10-09 18:13:25,892 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 59, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:25,909 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 60, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:25,925 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 61, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:25,942 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 62, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:25,958 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 63, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:25,972 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 64, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:25,987 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 65, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,000 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 66, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,013 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 67, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,029 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 68, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,047 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 69, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,066 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 70, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,082 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 71, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,100 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 72, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,117 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 73, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,133 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 74, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,150 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 75, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,167 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 76, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,182 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 77, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,195 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 78, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,210 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 79, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,223 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 80, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,237 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 81, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,251 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 82, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,269 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 83, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,288 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 84, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,304 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 85, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,323 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 86, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,338 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 87, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,355 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 88, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,398 | WARNING | app.services.notifications.notification_service | Notification delivery failed | {'notification_id': 59, 'error_type': 'RuntimeError'}
+2026-10-09 18:13:26,541 | INFO | app.services.notifications.notification_service | Document notifications queued | {'document_id': 16, 'recipients': 31}
+2026-10-09 18:13:26,562 | INFO | app.application.document_worker_service | Starting document processing | {'document_id': 7}
+2026-10-09 18:13:26,564 | INFO | app.application.document_worker_service | Existing chunks fetched | {'existing_chunks count': 0}
+2026-10-09 18:13:26,564 | INFO | app.application.document_worker_service | Existing chunk IDs: %s | {'existing_chunk_ids': []}
+2026-10-09 18:13:26,565 | INFO | app.application.document_worker_service | embeddings length:1, database_chunks len:1
+2026-10-09 18:33:06,428 | INFO | app.services.knowledge.embedding_service | embeddings length:1
+2026-10-09 18:33:06,434 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='Which user have highest salary?' | top_k=5 | results=3
+2026-10-09 18:33:06,434 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 55, 'score': 0.5200279951095581}, {'chunk_id': 56, 'score': 0.18154239654541016}, {'chunk_id': 57, 'score': 0.14099551737308502}]
+2026-10-09 18:33:06,435 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.3 | before=3 | after=1
+2026-10-09 18:33:06,442 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
+2026-10-09 18:35:33,626 | INFO | app.services.knowledge.embedding_service | embeddings length:1
+2026-10-09 18:35:33,633 | INFO | app.services.knowledge.retrieval_service | Vector retrieval completed | query='Which user has lowest salary?' | top_k=5 | results=3
+2026-10-09 18:35:33,633 | INFO | app.services.knowledge.retrieval_service | Vector similarity scores | [{'chunk_id': 55, 'score': 0.48883000016212463}, {'chunk_id': 56, 'score': 0.1853596270084381}, {'chunk_id': 57, 'score': 0.13773848116397858}]
+2026-10-09 18:35:33,634 | INFO | app.services.knowledge.retrieval_service | Retrieval threshold filtering | threshold=0.3 | before=3 | after=1
+2026-10-09 18:35:33,641 | INFO | app.services.knowledge.retrieval_service | Retrieved relevant chunks | count=1
+2026-10-09 18:36:16,181 | INFO | app.services.knowledge.retrieval_service | No accessible documents | role_ids=[5]

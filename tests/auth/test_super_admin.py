@@ -87,21 +87,43 @@ def test_normal_admin_cannot_manage_users(client, db_session, active_user):
 
 def test_admin_role_name_does_not_bypass_permission_checks(db_session):
     """Authorization remains permission-based rather than role-name based."""
-    permission = Permission(
-        name="document.create",
-        description="Document-create test permission",
+
+    # Get existing permission from the RBAC seeder.
+    document_create = db_session.scalar(
+        select(Permission).where(Permission.name == "document.create")
     )
-    role = Role(name="admin", description="Normal admin")
-    role.permissions = [permission]
+    assert document_create is not None
+
+    # Get existing admin role or create a normal admin role for this test.
+    admin_role = db_session.scalar(
+        select(Role).where(Role.name == "admin")
+    )
+
+    if admin_role is None:
+        admin_role = Role(
+            name="admin",
+            description="Normal admin",
+        )
+        db_session.add(admin_role)
+        db_session.flush()
+
+    # Make sure admin has document.create permission.
+    if document_create not in admin_role.permissions:
+        admin_role.permissions.append(document_create)
+
+    db_session.flush()
+
     user = User(
         email=f"admin-{uuid4().hex}@example.com",
         password_hash=hash_password("Admin@123456"),
         is_active=True,
+        roles=[admin_role],
     )
-    user.roles = [role]
-    db_session.add_all([permission, role, user])
+
+    db_session.add(user)
     db_session.commit()
 
     authorization = AuthorizationService(db_session)
+
     assert authorization.has_permission(user, "document.create")
     assert not authorization.has_permission(user, "user.create")

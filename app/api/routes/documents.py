@@ -44,8 +44,24 @@ async def upload_document(
         filename=file.filename or "",
         content_type=file.content_type,
         description=description,
+        role_ids=[],
     )
 
+@router.post(
+    "/{document_id}/retry",
+    response_model=DocumentResponse,
+)
+def retry_document(
+    document_id: int,
+    service: DocumentServiceDep,
+    current_user: Annotated[
+        User,
+        Depends(require_permission("document.create")),
+    ],
+) -> DocumentResponse:
+    return service.retry_document(
+        document_id=document_id,
+    )
 
 @router.get(
     "/{document_id}",
@@ -128,3 +144,4 @@ def assign_document_roles(
         document_id=document_id,
         role_ids=role_ids,
     )
+

@@ -1,7 +1,11 @@
+import logging
 from collections.abc import Sequence
 
+from app.exceptions.base import AppException
+from app.exceptions.common import BadRequestException
 from app.rag.embeddings.base import EmbeddingProvider
 
+logger = logging.getLogger(__name__)
 
 class EmbeddingService:
     """Generate vector embeddings for documents and queries."""
@@ -28,11 +32,19 @@ class EmbeddingService:
     ) -> list[float]:
         """Generate an embedding for a single search query."""
         if not query.strip():
-            raise ValueError("Query cannot be empty")
+            logger.info( 
+                f"Query Empty:{query}", 
+            ) 
+            raise BadRequestException("query.empty")
 
         embeddings = self.provider.embed_documents([query])
 
+        logger.info( 
+            f"embeddings length:{len(embeddings)}" 
+        ) 
+        
         if not embeddings:
-            raise ValueError("Failed to generate query embedding")
+            logger.info("Failed to generate query embedding") 
+            raise BadRequestException("query.embedding_failed")
 
         return embeddings[0]

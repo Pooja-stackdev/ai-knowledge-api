@@ -100,7 +100,8 @@ def get_current_user(
         ) from exc
 
     try:
-        user = UserRepository(db).get_by_id(user_id)
+        # user = UserRepository(db).get_by_id(user_id)
+        user = UserRepository(db).get_current_user_by_id_with_permissions(user_id)
         if user is None:
             raise ResourceNotFoundException(
                 resource="User",

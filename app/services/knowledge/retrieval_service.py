@@ -54,6 +54,11 @@ class RetrievalService:
             )
             return []
 
+        # logger.info(
+        #     "Accessible document id=%d",
+        #     str(accessible_document_ids),
+        # )
+
         allowed_chunk_ids = set(
             self.chunk_repository.get_ids_by_document_ids(
                 accessible_document_ids
@@ -66,6 +71,11 @@ class RetrievalService:
                 len(accessible_document_ids),
             )
             return []
+
+        # logger.info(
+        #     "Allowed Chunk Ids id=%d",
+        #     str(allowed_chunk_ids),
+        # )
 
         query_embedding = self.embedding_service.embed_query(query)
 

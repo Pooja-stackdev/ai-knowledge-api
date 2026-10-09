@@ -12,14 +12,12 @@ from app.api.dependencies.authentication import (
 from app.core.i18n import get_message
 from app.exceptions.auth import AuthenticationException
 from app.schemas.auth import (
+    AuthResponse,
     ChangePasswordRequest,
     ForgotPasswordRequest,
     RefreshTokenRequest,
     ResetPasswordRequest,
     TokenResponse,
-)
-from app.schemas.user import (
-    UserResponse,
 )
 
 router = APIRouter(
@@ -92,12 +90,13 @@ def logout(
 
 @router.get(
     "/me",
-    response_model=UserResponse,
+    response_model=AuthResponse,
 )
 def get_me(
     current_user: CurrentUser,
+    service: AuthServiceDependency
 ):
-    return current_user
+    return service.get_user_profile(user=current_user)
 
 @router.post(
     "/me/change-password",

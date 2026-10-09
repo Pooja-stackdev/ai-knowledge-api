@@ -8,7 +8,6 @@ from app.database.models.user_role import UserRole
 
 
 def test_get_user(active_user, super_admin_access_token,client):
-    print(f"active_user:{active_user.id}")
     response = client.get(
         f"/users/{active_user.id}",
         headers={
@@ -16,8 +15,6 @@ def test_get_user(active_user, super_admin_access_token,client):
         },
     )
 
-    print(response.json())
-    print(response.status_code)
     assert response.status_code == 200
 
     data = response.json()
@@ -122,7 +119,7 @@ def test_update_user_roles(
 def test_update_user_cannot_assign_super_admin_role(
     client,
     active_user,
-    super_admin_role,
+    super_admin_user,
     super_admin_access_token,
 ):
     response = client.put(
@@ -131,7 +128,7 @@ def test_update_user_cannot_assign_super_admin_role(
             "Authorization": f"Bearer {super_admin_access_token}"
         },
         json={
-            "role_ids": [super_admin_role.id],
+            "role_ids": [super_admin_user.roles[0].id],
         },
     )
 
@@ -191,7 +188,7 @@ def test_delete_user(
         },
     )
 
-    assert response.status_code == 204
+    assert response.status_code == 200
 
     deleted_user = db_session.scalar(
         select(User).where(User.id == user_id)

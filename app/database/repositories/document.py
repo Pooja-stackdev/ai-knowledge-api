@@ -31,6 +31,8 @@ class DocumentRepository:
 
         self.db.add(document)
 
+        self.db.flush()
+
         return document
 
     def get_by_id(self, document_id: int) -> Document | None:
@@ -142,15 +144,19 @@ class DocumentRepository:
 
         if role_ids:
             query = query.where(
-                or_(
-                    DocumentRole.role_id.is_(None),
-                    DocumentRole.role_id.in_(role_ids),
-                )
+                DocumentRole.role_id.in_(role_ids)
             )
+            # query = query.where(
+            #     or_(
+            #         DocumentRole.role_id.is_(None),
+            #         DocumentRole.role_id.in_(role_ids),
+            #     )
+            # )
         else:
-            query = query.where(
-                DocumentRole.role_id.is_(None)
-            )
+            # query = query.where(
+            #     DocumentRole.role_id.is_(None)
+            # )
+            return []
 
         return list(
             self.db.scalars(query).unique()
@@ -174,15 +180,10 @@ class DocumentRepository:
 
         if role_ids:
             statement = statement.where(
-                or_(
-                    DocumentRole.role_id.is_(None),
-                    DocumentRole.role_id.in_(role_ids),
-                )
+                DocumentRole.role_id.in_(role_ids),
             )
         else:
-            statement = statement.where(
-                DocumentRole.role_id.is_(None)
-            )
+           return None
 
         return self.db.scalar(statement)
 
@@ -211,6 +212,6 @@ class DocumentRepository:
                 DocumentRole.role_id.is_(None)
             )
 
-        statement = statement.distinct()
+        statement = statement.distinct().order_by(Document.created_at.desc())
 
         return list(self.db.scalars(statement))

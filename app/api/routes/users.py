@@ -11,6 +11,7 @@ from app.schemas.user import (
     UpdateUserRequest,
     UserResponse,
 )
+from app.utils.response import success_response
 
 router = APIRouter(
     prefix="/users",
@@ -47,7 +48,7 @@ def get_user(
     current_user: CurrentUser,
     service: UserServiceDependency,
 ):
-    return service.get_user(user_id)
+    return service.get_user(user_id,current_user)
 
 @router.put(
     "/{user_id}",
@@ -71,7 +72,7 @@ def update_user(
 
 @router.delete(
     "/{user_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
+    status_code=status.HTTP_200_OK,
     dependencies=[
         Depends(require_permission("user.delete")),
     ],
@@ -83,4 +84,20 @@ def delete_user(
 ):
     service.delete_user(user_id)
 
+    return success_response(
+        message="User deleted successfully",
+    )
 
+@router.get(
+    "",
+    response_model=list[UserResponse],
+)
+def get_users(
+    current_user: Annotated[
+        User,
+        Depends(require_permission("user.read")),
+    ],
+    service: UserServiceDependency,
+):
+    users = service.get_users(current_user)
+    return users

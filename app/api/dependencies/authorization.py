@@ -27,6 +27,7 @@ def require_permission(
             current_user,
             permission,
         ):
+            # print(f"User:{current_user.id}, Name:{current_user.email} unauthorized.")
             raise AuthorizationException("auth.forbidden")
 
         return current_user

@@ -47,7 +47,9 @@
     "super_admin_protected": "The super-admin role is protected and cannot be changed."
   },
   "query": {
-    "empty": "Query cannot be empty."
+    "empty": "Query cannot be empty.",
+    "no_relevant_info": "I couldn't find information related to your question in the available knowledge base.",
+    "embedding_failed":"Failed to generate query embedding"
   },
   "worker": {
     "no_usable_chunks": "Document contains no usable chunks.",

@@ -17,7 +17,9 @@ LANGUAGE_MAP = {
 
 def _find_message(messages: Mapping[str, Any], key: str) -> str | None:
     value: Any = messages
+    
     for part in key.split("."):
+        
         if not isinstance(value, Mapping):
             return None
         value = value.get(part)
@@ -27,8 +29,11 @@ def _find_message(messages: Mapping[str, Any], key: str) -> str | None:
 def get_message(key: str, lang: str | None = None, **params: Any) -> str:
     """Translate a dotted key, falling back safely to English then the key."""
     requested_language = lang or get_current_language()
+
     message = _find_message(LANGUAGE_MAP.get(requested_language, {}), key)
+    
     message = message or _find_message(LANGUAGE_MAP[DEFAULT_LANGUAGE], key)
+    
     message = message or key
     try:
         return message.format(**params)

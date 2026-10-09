@@ -127,7 +127,7 @@ class DocumentWorkerService:
             if self.notification_service is not None:
                 try:
                     self.notification_service.enqueue_document_completed(document.id)
-                except Exception:
+                except AppException:
                     logger.exception(
                         "Unable to queue completion notifications",
                         extra={"document_id": document.id},

@@ -117,7 +117,7 @@ class FaissVectorStore:
             if allowed_ids is not None
             else top_k
         )
-        print(f"search_k:{search_k}")
+        # print(f"search_k:{search_k}")
         scores, ids = self.index.search(
             vector,
             search_k,

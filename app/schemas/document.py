@@ -16,6 +16,7 @@ class DocumentResponse(BaseModel):
     content_type: str
     description: str | None
     storage_path: str
+    last_error: str | None
     created_at: datetime
     updated_at: datetime
 

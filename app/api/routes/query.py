@@ -34,7 +34,7 @@ CurrentUserDep = Annotated[
 async def query_knowledge_base(
     request: QueryRequest,
     service: QueryServiceDep,
-    # current_user: CurrentUserDep,
+    current_user: CurrentUserDep,
     role_ids: Annotated[
         list[int],
         Depends(get_current_user_role_ids),

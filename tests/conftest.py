@@ -6,8 +6,10 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
 from app.api.dependencies.authentication import get_email_provider
+from app.api.dependencies.document import create_document_service
 from app.application.document_worker_service import DocumentWorkerService
 from app.core.config import settings
+from app.core.rbac import SUPER_ADMIN_ROLE_NAME
 from app.core.security import create_access_token, create_refresh_token, hash_password
 from app.database.connection import get_db_session
 from app.database.models.base import Base
@@ -24,9 +26,14 @@ from app.database.repositories.document import (
 from app.database.repositories.document_chunk import (
     DocumentChunkRepository,
 )
+from app.database.repositories.document_role import DocumentRoleRepository
+from app.database.repositories.role_repository import RoleRepository
+from app.database.repositories.user_repository import UserRepository
+from app.database.seeders.rbac_seeder import seed_rbac
 from app.domain.enums.document import DocumentStatus
 from app.main import app
 from app.services.knowledge.document_service import DocumentService
+from app.storage.local_storage import LocalFileStorage
 
 test_engine = create_engine(
     settings.test_database_url,
@@ -43,16 +50,41 @@ class FakeVectorService:
     def delete_document_vectors(self, document_id: int) -> None:
         pass
 
+@pytest.fixture
+def storage(tmp_path):
+    return LocalFileStorage(
+        base_path=tmp_path,
+    )
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_database():
     Base.metadata.create_all(bind=test_engine)
 
-    yield
+    db = TestSessionLocal()
 
-    Base.metadata.drop_all(bind=test_engine)
+    try:
+        seed_rbac(db)
+        yield
+    finally:
+        db.close()
+        Base.metadata.drop_all(bind=test_engine)
 
 
+# def seed_roles(db_session):
+#     roles = [
+#         Role(
+#             name="super_admin",
+#         ),
+#         Role(
+#             name="Admin",
+#         ),
+#         Role(
+#             name="User",
+#         ),
+#     ]
+
+#     db_session.add_all(roles)
+#     db_session.commit()
 
 @pytest.fixture
 def db_session():
@@ -95,16 +127,28 @@ def document(db_session):
     return document
 
 
+# @pytest.fixture
+# def document_service(db_session):
+#     repository = DocumentRepository(db_session)
+#     document_role_repository = DocumentRoleRepository(db_session)
+#     role_repository = RoleRepository(db_session)
+#     chunk_repository = DocumentChunkRepository(db_session)
+
+#     return DocumentService(
+#         db=db_session,
+#         repository=repository,
+#         document_role_repository=document_role_repository,
+#         role_repository=role_repository,
+#         storage=None,
+#         chunk_repository=chunk_repository,
+#         vector_service=FakeVectorService(),
+#     )
 @pytest.fixture
 def document_service(db_session):
-    repository = DocumentRepository(db_session)
-    chunk_repository = DocumentChunkRepository(db_session)
-
-    return DocumentService(
+    return create_document_service(
         db=db_session,
-        repository=repository,
-        storage=None,
-        chunk_repository=chunk_repository,
+        storage=storage,
+        chunk_repository=DocumentChunkRepository(db_session),
         vector_service=FakeVectorService(),
     )
 
@@ -257,68 +301,74 @@ def upload_access_token(upload_user):
     token, _ = create_access_token(upload_user.id)
     return token
 
+# @pytest.fixture
+# def super_admin_role(
+#     db_session,
+#     super_admin_permissions,
+# ):
+#     role = db_session.scalar(
+#         select(Role).where(Role.name == SUPER_ADMIN_ROLE_NAME)
+#     )
+
+#     if role is None:
+#         role = Role(
+#             name=SUPER_ADMIN_ROLE_NAME,
+#             description="System super administrator",
+#         )
+#         db_session.add(role)
+#         db_session.flush()
+
+#     for permission in super_admin_permissions:
+#         exists = db_session.scalar(
+#             select(RolePermission).where(
+#                 RolePermission.role_id == role.id,
+#                 RolePermission.permission_id == permission.id,
+#             )
+#         )
+
+#         if exists is None:
+#             db_session.add(
+#                 RolePermission(
+#                     role_id=role.id,
+#                     permission_id=permission.id,
+#                 )
+#             )
+
+#     db_session.commit()
+#     db_session.refresh(role)
+
+#     return role
+
 @pytest.fixture
-def super_admin_role(
-    db_session,
-    super_admin_permissions,
-):
-    role = db_session.scalar(
-        select(Role).where(Role.name == "super_admin")
-    )
+def super_admin_user(db_session):
 
-    if role is None:
-        role = Role(
-            name="super_admin",
-            description="System super administrator",
-        )
-        db_session.add(role)
-        db_session.flush()
-
-    for permission in super_admin_permissions:
-        exists = db_session.scalar(
-            select(RolePermission).where(
-                RolePermission.role_id == role.id,
-                RolePermission.permission_id == permission.id,
-            )
-        )
-
-        if exists is None:
-            db_session.add(
-                RolePermission(
-                    role_id=role.id,
-                    permission_id=permission.id,
-                )
-            )
-
-    db_session.commit()
-    db_session.refresh(role)
-
-    return role
-
-@pytest.fixture
-def super_admin_user(db_session, super_admin_role):
-    user = User(
-        email=f"super-admin-{uuid4().hex}@example.com",
-        password_hash=hash_password("Admin@123456"),
-        is_active=True,
-    )
-
-    db_session.add(user)
-    db_session.flush()
-
-    db_session.add(
-        UserRole(
-            user_id=user.id,
-            role_id=super_admin_role.id,
-        )
-    )
-    print(f"USER IDDDDD------{user.id}")
-    print(settings.test_database_url)
-
-    db_session.commit()
-    db_session.refresh(user)
+    repository = UserRepository(db_session)
+    user = repository.get_super_admin_user()
 
     return user
+        
+    # user = User(
+    #     email=f"super-admin-{uuid4().hex}@example.com",
+    #     password_hash=hash_password("Admin@123456"),
+    #     is_active=True,
+    # )
+
+    # db_session.add(user)
+    # db_session.flush()
+
+    # db_session.add(
+    #     UserRole(
+    #         user_id=user.id,
+    #         role_id=super_admin_role.id,
+    #     )
+    # )
+    # print(f"USER IDDDDD------{user.id}")
+    # print(settings.test_database_url)
+
+    # db_session.commit()
+    # db_session.refresh(user)
+
+    # return user
 
 @pytest.fixture
 def super_admin_access_token(super_admin_user):
@@ -326,35 +376,35 @@ def super_admin_access_token(super_admin_user):
     token, _ = create_access_token(super_admin_user.id)
     return token
 
-@pytest.fixture
-def super_admin_permissions(db_session):
-    permission_names = [
-        "user.read",
-        "user.create",
-        "user.update",
-        "user.delete",
-    ]
+# @pytest.fixture
+# def super_admin_permissions(db_session):
+#     permission_names = [
+#         "user.read",
+#         "user.create",
+#         "user.update",
+#         "user.delete",
+#     ]
 
-    permissions = []
+#     permissions = []
 
-    for name in permission_names:
-        permission = db_session.scalar(
-            select(Permission).where(
-                Permission.name == name
-            )
-        )
+#     for name in permission_names:
+#         permission = db_session.scalar(
+#             select(Permission).where(
+#                 Permission.name == name
+#             )
+#         )
 
-        if permission is None:
-            permission = Permission(
-                name=name,
-                description=f"{name} permission",
-            )
-            db_session.add(permission)
-            db_session.flush()
+#         if permission is None:
+#             permission = Permission(
+#                 name=name,
+#                 description=f"{name} permission",
+#             )
+#             db_session.add(permission)
+#             db_session.flush()
 
-        permissions.append(permission)
+#         permissions.append(permission)
 
-    return permissions
+#     return permissions
 
 class FakeEmailProvider:
     def __init__(self):

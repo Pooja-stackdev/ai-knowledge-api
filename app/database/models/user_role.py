@@ -1,7 +1,9 @@
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.models.base import Base
+from app.database.models.role import Role
+from app.database.models.user import User
 
 
 class UserRole(Base):
